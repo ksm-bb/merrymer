@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+  
+  <link rel="apple-touch-icon" href="https://i.ibb.co/1Cf8JTS/S-4620317.jpg">
+  <link rel="icon" sizes="192x192" href="https://i.ibb.co/1Cf8JTS/S-4620317.jpg">
+  <link rel="shortcut icon" href="https://i.ibb.co/1Cf8JTS/S-4620317.jpg">
+  
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useMemo, useEffect, useCallback } = React;
+
+    // ==========================================
+    // 🖼️ COMPONENTS: ไอคอน SVG
+    // ==========================================
+    const IconPlus = ({size=24, className=""}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className={className}><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>;
+    const IconHome = ({size=24, className=""}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>;
+    const IconSearch = ({size=24, className=""}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>;
+    const IconClock = ({size=24, className=""}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>;
+    const IconCheck = ({size=24, className=""}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="20 6 9 17 4 12"></polyline></svg>;
+    const IconFileText = ({size=24, className=""}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>;
+    const IconCalendar = ({size=24, className=""}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>;
+    const IconLoader = ({size=24, className=""}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className={className}><line x1="12" y1="2" x2="12" y2="6"></line><line x1="12" y1="18" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="6" y2="12"></line><line x1="18" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line></svg>;
+    const IconEye = ({size=24, className=""}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>;
+    const IconEyeOff = ({size=24, className=""}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>;
+    const IconImage = ({size=24, className=""}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>;
+    const IconList = ({size=24, className=""}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className={className}><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>;
+    const IconChevronLeft = ({size=24, className=""}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="15 18 9 12 15 6"></polyline></svg>;
+    const IconChevronRight = ({size=24, className=""}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="9 18 15 12 9 6"></polyline></svg>;
+    const IconTrash = ({size=24, className=""}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>;
+    const IconChevronsRight = ({size=24, className=""}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="13 17 18 12 13 7"></polyline><polyline points="6 17 11 12 6 7"></polyline></svg>;
+    const IconSettings = ({size=24, className=""}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.6.8.96 1.41.96h.09a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>;
+    
+    // ไอคอนโซเชียล
+    const IconFacebook = ({size=24, className=""}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>;
+    const IconDiscord = ({size=24, className=""}) => <svg width={size} height={size} fill="currentColor" viewBox="0 0 16 16" className={className}><path d="M13.545 2.907a13.2 13.2 0 0 0-3.257-1.011.05.05 0 0 0-.052.025c-.141.25-.297.577-.406.833a12.2 12.2 0 0 0-3.658 0 8 8 0 0 0-.412-.833.05.05 0 0 0-.052-.025c-1.125.194-2.22.534-3.257 1.011a.04.04 0 0 0-.021.018C.356 6.024-.213 9.047.066 12.032q.003.022.021.037a13.3 13.3 0 0 0 3.995 2.02.05.05 0 0 0 .056-.019q.463-.63.818-1.329a.05.05 0 0 0-.01-.059l-.018-.011a9 9 0 0 1-1.248-.595.05.05 0 0 1-.02-.066l.015-.019q.127-.095.248-.195a.05.05 0 0 1 .051-.007c2.619 1.196 5.454 1.196 8.041 0a.05.05 0 0 1 .053.007q.121.1.248.195a.05.05 0 0 1-.004.085 8 8 0 0 1-1.249.594.05.05 0 0 0-.03.03.05.05 0 0 0 .003.041c.24.465.515.909.817 1.329a.05.05 0 0 0 .056.019 13.2 13.2 0 0 0 4.001-2.02.05.05 0 0 0 .021-.037c.334-3.451-.559-6.449-2.366-9.106a.03.03 0 0 0-.02-.019m-8.198 7.307c-.789 0-1.438-.724-1.438-1.612s.637-1.613 1.438-1.613c.807 0 1.45.73 1.438 1.613 0 .888-.637 1.612-1.438 1.612m5.316 0c-.788 0-1.438-.724-1.438-1.612s.637-1.613 1.438-1.613c.807 0 1.451.73 1.438 1.613 0 .888-.631 1.612-1.438 1.612"/></svg>;
+    const IconTikTok = ({size=24, className=""}) => <svg width={size} height={size} fill="currentColor" viewBox="0 0 16 16" className={className}><path d="M9 0h1.98c.144.715.54 1.617 1.235 2.512C12.895 3.389 13.797 4 15 4v2c-1.753 0-3.07-.814-4-1.829V11a5 5 0 1 1-5-5v2a3 3 0 1 0 3 3V0Z"/></svg>;
+
+    // ==========================================
+    // 🎨 ตัวแปรสีหลัก (COLORS Object)
+    // ==========================================
+    const COLORS = {
+      blue: '#798E61',       
+      pink: '#C1645B',       
+      purple: '#E6D18C',     
+      orange: '#E6D18C',     
+      bg: '#FFF5F6',         
+      white: '#FFFFFF',      
+      textMain: '#A13C36',   
+      textSoft: '#A13C36',   
+      pinkDeep: '#A13C36',   
+      blueDeep: '#798E61',   
+      purpleDeep: '#C1645B', 
+      orangeDeep: '#A13C36', 
+      cardBg: '#E6D18C',     
+      cardBgDone: '#9FB279', 
+      cardWhite: '#FFFFFF',
+      cardBorder: '#C1645B', 
+      cardInner: '#FFFFFF',
+      cloudWhite: '#FFFFFF',
+      modalBg: '#FFFFFF',
+      navBarBg: '#FFFFFF',
+      profileBorder: '#A13C36',
+      buttonBg: '#FFFFFF',
+      dividerColor: '#C1645B',
+      emptyStateBg: '#FFFFFF',
+      calendarBg: '#FFFFFF',
+      searchInputBg: '#FFFFFF',
+      filterBarBg: '#FFFFFF',
+      bannerOverlayBg: '#FFFFFF',
+    };
+
+    // ==========================================
+    // 🚦 ระบบจัดการ Status
+    // ==========================================
+    const TASK_STATUSES = [
+      { id: 'waiting in queue', label: 'waiting in queue', percent: 0, img: 'https://i.ibb.co/0ps8TBWN/11.png' },
+      { id: 'building structure', label: 'building structure', percent: 25, img: 'https://i.ibb.co/5hnp6VzL/22.png' },
+      { id: 'bringing it to life', label: 'bringing it to life', percent: 50, img: 'https://i.ibb.co/BKKmVj3f/33.png' },
+      { id: 'quality check', label: 'quality check', percent: 75, img: 'https://i.ibb.co/JRLnwv6c/44.png' },
+      { id: 'ready for delivery', label: 'ready for delivery', percent: 100, img: 'https://i.ibb.co/wZrpyyTT/55.png' }
+    ];
+
+    const getNormalizedStatus = (status) => {
+      if (!status) return 'waiting in queue';
+      if (status === 'todo') return 'waiting in queue';
+      if (status === 'doing') return 'bringing it to life';
+      if (status === 'done') return 'ready for delivery';
+      if (TASK_STATUSES.some(s => s.id === status)) return status;
+      return 'waiting in queue'; 
+    };
+
+    // ==========================================
+    // ✨ COMPONENT: ดาวกลมๆ อ้วนๆ
+    // ==========================================
+    const ChubbyStar = React.memo(({ top, left, right, bottom, scale = 1, opacity = 0.8, delay = '0s', reverse = false }) => (
+      <div className="absolute pointer-events-none z-0" style={{ top, left, right, bottom, opacity, transform: `scale(${scale})` }}>
+        <div className={reverse ? 'animate-float-reverse' : 'animate-float'} style={{ animationDelay: delay }}>
+          <svg width="40" height="40" viewBox="0 0 100 100" fill={COLORS.purple} className="drop-shadow-sm">
+            <path d="M50 10 C50 10 55 45 90 50 C90 50 55 55 50 90 C50 90 45 55 10 50 C10 50 45 45 50 10 Z" />
+          </svg>
+        </div>
+      </div>
+    ));
+
+    // ==========================================
+    // 🌅 COMPONENT: DynamicBackground
+    // ==========================================
+    const DynamicBackground = React.memo(() => (
+      <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <div className="absolute top-[5%] left-[-10%] w-72 h-72 rounded-full blur-[80px] opacity-50 animate-float" style={{ backgroundColor: COLORS.pink }}></div>
+        <div className="absolute bottom-[10%] right-[-10%] w-80 h-80 rounded-full blur-[90px] opacity-40 animate-float-reverse" style={{ backgroundColor: COLORS.blue }}></div>
+        <div className="absolute top-[40%] right-[10%] w-48 h-48 rounded-full blur-[70px] opacity-40 animate-float" style={{ backgroundColor: COLORS.purple }}></div>
+        
+        <ChubbyStar top="5%" left="15%" scale={1.0} opacity={0.8} delay="0s" />
+        <ChubbyStar top="15%" right="25%" scale={0.7} opacity={0.6} delay="1s" reverse />
+        <ChubbyStar top="35%" left="55%" scale={1.3} opacity={0.7} delay="2s" />
+        <ChubbyStar top="65%" left="10%" scale={0.8} opacity={0.5} delay="3s" reverse />
+        <ChubbyStar bottom="18%" right="18%" scale={1.0} opacity={0.9} delay="1.5s" />
+        <ChubbyStar bottom="8%" left="35%" scale={0.6} opacity={0.4} delay="2.5s" />
+        <ChubbyStar top="50%" right="5%" scale={0.9} opacity={0.7} delay="0.5s" />
+      </div>
+    ));
+
+    // ==========================================
+    // 🔝 COMPONENT: Header
+    // ==========================================
+    const Header = React.memo(({ isAdmin, setIsAdmin, setShowAuthModal, handleImageUpload, profileImage }) => (
+      <div className="px-5 pt-6 pb-2 relative z-10">
+        <div className="backdrop-blur-md rounded-[32px] p-4 flex items-center justify-between h-20 relative overflow-hidden group border-[2px]" style={{ backgroundColor: `${COLORS.cardWhite}e6`, borderColor: COLORS.cardBorder, boxShadow: '0 10px 25px -5px rgba(161, 60, 54, 0.2)' }}>
+          <div className="absolute left-6 top-1/2 -translate-y-1/2 w-24 h-8 blur-xl rounded-full" style={{ backgroundColor: `${COLORS.pink}60` }}></div>
+          <div className="flex flex-col justify-center ml-2 relative z-10">
+            <div className="flex items-center gap-1">
+             <h1 className="text-2xl font-black italic tracking-tighter flex">
+                {"merrymer".split('').map((char, index) => (
+                  <span 
+                    key={index} 
+                    className={`bg-gradient-to-br from-[#A13C36] via-[#C1645B] to-[#E6D18C] bg-clip-text text-transparent drop-shadow-sm inline-block animate-text-wave pb-2 ${char === ' ' ? 'w-2.5' : 'pr-[1.5px]'}`} 
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                  >
+                    {char}
+                  </span>
+                ))}
+              </h1>
+              <button onClick={() => isAdmin ? setIsAdmin(false) : setShowAuthModal(true)} className={`px-2 py-0.5 ml-1 rounded-full text-[7px] font-black uppercase tracking-widest border-2 shadow-sm transition-all active:scale-95`} style={{ backgroundColor: isAdmin ? COLORS.pinkDeep : COLORS.buttonBg, color: isAdmin ? COLORS.white : COLORS.textSoft, borderColor: isAdmin ? COLORS.pinkDeep : COLORS.cardBorder }}>
+                {isAdmin ? 'Admin' : 'Guest'}
+              </button>
+            </div>
+            <div className="flex items-center gap-1.5 opacity-90">
+              <div className="w-4 h-[2px] rounded-full" style={{ backgroundColor: COLORS.pinkDeep }}></div>
+              <p className="text-[8px] font-black tracking-[0.5em] uppercase" style={{ color: COLORS.purpleDeep }}>Check Q</p>
+            </div>
+          </div>
+          <div onClick={isAdmin ? handleImageUpload : undefined} className={`w-16 h-16 rounded-[1.25rem] flex items-center justify-center relative overflow-hidden transition-transform shadow-md ${isAdmin ? 'cursor-pointer hover:scale-105 active:scale-95' : ''}`} style={{ backgroundColor: COLORS.cardInner, borderWidth: '3px', borderColor: COLORS.profileBorder }}>
+            {profileImage ? (
+              <img src={profileImage} alt="Profile" className="w-full h-full object-cover" />
+            ) : (
+              <>
+                <div className="absolute inset-0 opacity-60" style={{ background: `linear-gradient(to top right, ${COLORS.pink}, ${COLORS.blue})` }}></div>
+                <span className="text-2xl relative z-10 select-none drop-shadow-md">🎀</span>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    ));
+
+    // ==========================================
+    // 🌸 COMPONENT: ProgressImage
+    // ==========================================
+    const ProgressImage = React.memo(({ progress, todayTasksLength, doneToday, triggerFlowerBounce, isBouncing }) => {
+      let imgUrl = 'https://i.ibb.co/GQCmwLzF/11.png'; 
+      if (progress >= 75) imgUrl = 'https://i.ibb.co/rRR5Kswf/44.png'; 
+      else if (progress >= 50) imgUrl = 'https://i.ibb.co/Y4ZCyS2j/33.png'; 
+      else if (progress >= 25) imgUrl = 'https://i.ibb.co/0pWrykLz/22.png'; 
+
+      return (
+        <div onClick={triggerFlowerBounce} className={`backdrop-blur-sm rounded-[28px] p-3 flex flex-col items-center justify-center h-full relative overflow-hidden transition-all duration-300 cursor-pointer border-[2px] ${isBouncing ? 'scale-95' : 'hover:scale-[1.02]'}`} style={{ backgroundColor: `${COLORS.cardWhite}ee`, borderColor: COLORS.cardBorder, boxShadow: '0 10px 20px -5px rgba(161, 60, 54, 0.15)' }}>
+          <div className="absolute top-2 left-3 text-[8px] font-black uppercase tracking-tighter" style={{ color: COLORS.pinkDeep }}>ความสำเร็จวันนี้</div>
+          
+          <div className="relative w-full h-20 flex items-center justify-center mt-2">
+            <div key={imgUrl} className="w-full h-full flex items-center justify-center animate-pop">
+              <img src={imgUrl} className="w-auto h-full max-h-[70px] object-contain relative z-10 animate-breathe" alt="progress" />
+            </div>
+          </div>
+          
+          <div className="mt-1 flex items-center gap-1.5 px-2.5 py-0.5 rounded-full z-10 shadow-sm" style={{ backgroundColor: COLORS.pinkDeep }}>
+            <span className="text-[10px] font-black text-white">{progress}%</span>
+            <div className="w-1 h-1 rounded-full bg-white opacity-50"></div>
+            <span className="text-[7px] font-bold text-white uppercase">{doneToday} / {todayTasksLength} งาน</span>
+          </div>
+        </div>
+      );
+    });
+
+    // ==========================================
+    // 📊 COMPONENT: CompactStats
+    // ==========================================
+    const CompactStats = React.memo(({ isAdmin, selectedNextDate, nextQueueDate, handleSetManualDate, waitingCount }) => (
+      <div className="backdrop-blur-sm rounded-[28px] p-1 shadow-lg h-full flex overflow-hidden relative group transition-all border-[2px]" style={{ backgroundColor: `${COLORS.cardWhite}ee`, borderColor: COLORS.cardBorder, boxShadow: '0 10px 20px -5px rgba(161, 60, 54, 0.15)' }}>
+          <div className={`flex-1 flex flex-col justify-center items-center p-2 relative rounded-l-[24px] transition-colors overflow-hidden ${isAdmin ? 'hover:brightness-105 cursor-pointer' : ''}`} style={{ backgroundColor: COLORS.orange }}>
+            {isAdmin && (
+              <input type="date" className="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10" value={selectedNextDate || nextQueueDate} onChange={(e) => handleSetManualDate(e.target.value)} />
+            )}
+            <div className="absolute top-2 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-md text-[7px] font-black shadow-sm uppercase tracking-wider whitespace-nowrap text-white" style={{ backgroundColor: COLORS.pinkDeep }}>NEXT QUEUE</div>
+            
+            <div className="flex flex-col items-center mt-1 relative z-0 pointer-events-none">
+              <span className="text-3xl font-black leading-none tracking-tighter" style={{ color: COLORS.textMain }}>{new Date(nextQueueDate).getDate()}</span>
+              <span className="text-[9px] font-black uppercase mt-0.5" style={{ color: COLORS.pinkDeep }}>{new Date(nextQueueDate).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</span>
+            </div>
+
+            {isAdmin && selectedNextDate && (
+              <button 
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleSetManualDate(''); }} 
+                className="absolute bottom-1.5 left-1/2 -translate-x-1/2 z-20 px-2.5 py-0.5 rounded-md text-[7px] font-black shadow-sm hover:scale-105 active:scale-95 transition-all text-white"
+                style={{ backgroundColor: COLORS.blueDeep }}
+                title="กลับไปคำนวณวันว่างอัตโนมัติ"
+              >
+                AUTO
+              </button>
+            )}
+          </div>
+
+          <div className="my-3 w-1 rounded-full shadow-inner" style={{ backgroundColor: COLORS.cardWhite }}></div>
+          
+          <div className="flex-1 flex flex-col justify-center items-center p-2 relative rounded-r-[24px]" style={{ backgroundColor: COLORS.blueDeep }}>
+            <div className="absolute top-2 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-md text-[7px] font-black shadow-sm uppercase tracking-wider whitespace-nowrap z-10 text-white" style={{ backgroundColor: COLORS.pinkDeep }}>จำนวนคิวก่อนหน้า</div>
+            
+            <div className="relative mt-3 flex flex-col items-center">
+               <div className="relative">
+                 <div className="w-11 h-11 rounded-full flex flex-col items-center justify-center shadow-lg relative z-10" style={{ backgroundColor: COLORS.white, borderWidth: '3px', borderColor: COLORS.purple }}>
+                    <span className="text-xl font-black leading-none" style={{ color: COLORS.blueDeep }}>{waitingCount}</span>
+                 </div>
+               </div>
+               <span className="text-[8px] font-black uppercase mt-1.5 relative z-10 text-white">คิว</span>
+            </div>
+          </div>
+      </div>
+    ));
+
+    // ==========================================
+    // 🃏 COMPONENT: TaskCard 
+    // ==========================================
+    const TaskCard = React.memo(({ task, isAdmin, onEdit, onCycleStatus }) => {
+      const normStatus = getNormalizedStatus(task.status);
+      const currentStatusInfo = TASK_STATUSES.find(s => s.id === normStatus) || TASK_STATUSES[0];
+      const isDone = normStatus === 'ready for delivery';
+      const isInProgress = normStatus === 'bringing it to life' || normStatus === 'building structure';
+
+      const cardBgColor = isDone ? COLORS.cardBgDone : COLORS.white;
+      const cardBorderColor = isDone ? COLORS.blueDeep : COLORS.cardBorder;
+
+      return (
+        <div className="flex flex-row items-center w-full mb-3.5 gap-2 group">
+          
+          <div className="w-[60px] h-[60px] shrink-0 relative flex items-center justify-center z-10">
+            <img src={currentStatusInfo.img} className="w-full h-full object-contain animate-float-icon drop-shadow-md" alt="status icon" />
+          </div>
+          
+          <div onClick={() => isAdmin && onEdit(task)} className={`flex-1 min-w-0 relative rounded-[22px] p-3.5 transition-all shadow-md backdrop-blur-sm ${isAdmin ? 'active:scale-[0.97] cursor-pointer hover:shadow-lg' : ''}`} 
+            style={{ 
+              backgroundColor: cardBgColor,
+              borderWidth: '2px',
+              borderStyle: 'solid',
+              borderColor: cardBorderColor, 
+            }}
+          >
+            {/* รูปตกแต่งขยับรอบๆ การ์ด */}
+            {isInProgress && (
+               <div className="absolute inset-0 pointer-events-none z-0">
+                 <img src="https://i.ibb.co/rKwvDp8P/4.png" className="absolute -top-2 -left-3 w-5 h-5 object-contain animate-float-deco-1 drop-shadow-md" />
+                 <img src="https://i.ibb.co/TqFXtBJN/3.png" className="absolute top-[30%] -right-4 w-4 h-4 object-contain animate-float-deco-2 drop-shadow-md" style={{ animationDelay: '0.5s' }} />
+                 <img src="https://i.ibb.co/ycPZL5cS/2.png" className="absolute -bottom-2 right-4 w-5 h-5 object-contain animate-float-deco-3 drop-shadow-md" style={{ animationDelay: '1s' }} />
+                 <img src="https://i.ibb.co/bRq8vkJr/1.png" className="absolute top-[60%] -left-3 w-4 h-4 object-contain animate-float-deco-4 drop-shadow-md" style={{ animationDelay: '1.5s' }} />
+               </div>
+            )}
+            
+            <div className="absolute left-2 top-3 bottom-3 w-1.5 rounded-full shadow-inner z-10" style={{ backgroundColor: task.channel === 'LINE' ? '#798E61' : task.channel === 'FB' || task.channel === 'FACEBOOK' ? '#C1645B' : task.channel === 'IG' ? '#A13C36' : COLORS.pinkDeep }}></div>
+            
+            <div className="flex flex-col w-full relative z-10 pl-3 pr-1">
+              
+              <div className="flex justify-between items-start gap-1">
+                <div className="flex items-center gap-1.5 min-w-0 flex-1">
+                  <span className={`font-black text-[14px] truncate leading-tight ${isDone ? 'text-white' : ''}`} style={{ color: isDone ? '#FFFFFF' : COLORS.textMain }}>{task.client}</span>
+                  
+                  {task.priority === 'urgent' && !isDone && <span className="text-[7px] font-bold animate-pulse px-1.5 py-0.5 rounded-md shadow-sm shrink-0 text-white" style={{ backgroundColor: COLORS.pinkDeep }}>{'\u{1F525}'} ด่วน</span>}
+                  
+                  <span className={`text-[7px] px-1.5 py-0.5 rounded-md font-black uppercase shadow-sm leading-none shrink-0 ${
+                    task.channel === 'LINE' ? 'bg-[#798E61] text-white' : 
+                    task.channel === 'FB' || task.channel === 'FACEBOOK' ? 'bg-[#C1645B] text-white' : 
+                    task.channel === 'IG' ? 'bg-[#A13C36] text-white' : 
+                    'bg-gray-400 text-white'
+                  }`}>{task.channel}</span>
+                </div>
+                
+                <div className={`flex items-center gap-1 text-[8px] font-black px-1.5 py-0.5 rounded-md shadow-sm border shrink-0 leading-none ${isDone ? 'bg-[#798E61] text-white border-white/40' : 'bg-white text-[#A13C36] border-[#D7ACA7]'}`}>
+                    <IconCalendar size={9} />
+                    {new Date(task.deadline).toLocaleDateString('th-TH', { day: '2-digit', month: '2-digit', year: '2-digit' })}
+                </div>
+              </div>
+              
+              <div className="w-full min-w-0 mt-0.5 flex justify-between items-center gap-2">
+                <span className={`text-[11px] font-bold truncate ${isDone ? 'line-through text-white/90' : ''}`} style={{ color: isDone ? '' : COLORS.textMain }}>
+                  {task.type} 
+                  {task.details && <span className="font-medium ml-1" style={{ color: isDone ? '' : COLORS.textSoft }}>({task.details})</span>}
+                </span>
+                
+                {task.admin && (
+                  <span className={`text-[8px] font-black px-1.5 py-0.5 rounded-md shadow-sm shrink-0 border ${isDone ? 'bg-[#798E61] text-white border-white/40' : 'bg-[#FFF5F6] text-[#A13C36]'}`} style={isDone ? {} : { borderColor: COLORS.cardBorder }}>
+                    {task.admin}
+                  </span>
+                )}
+              </div>
+
+              <div className="mt-0.5">
+                 {/* ขยับสถานะลงมาให้เกือบติดหลอด */}
+                 <div className="flex justify-between items-end mb-[1px] px-1">
+                   <span className={`text-[8px] font-black uppercase tracking-wider leading-none truncate pr-1 ${isDone ? 'text-white' : ''}`} style={{ color: isDone ? '#FFFFFF' : COLORS.pinkDeep }}>{currentStatusInfo.label}</span>
+                 </div>
+                 
+                 <div className="flex items-center gap-2">
+                   <div className="flex-1 h-[10px] rounded-full relative overflow-hidden shadow-sm bg-[#FFF5F6]" style={{ borderWidth: '1px', borderColor: '#798E61' }}>
+                      <div className="absolute inset-0 rounded-full overflow-hidden">
+                         <div className="absolute left-0 top-0 bottom-0 transition-all duration-700 ease-out progress-stripes" 
+                              style={{ width: `${currentStatusInfo.percent}%`, backgroundColor: '#A13C36' }}>
+                         </div>
+                      </div>
+                   </div>
+                   
+                   {isAdmin && (
+                      <button onClick={(e) => onCycleStatus(e, task.id)} className={`w-8 h-8 shrink-0 rounded-[8px] flex items-center justify-center transition-all border-[2px] active:scale-90 shadow-sm hover:shadow-md hover:bg-[#FFF5F6]`} style={{ backgroundColor: COLORS.white, borderColor: COLORS.cardBorder, color: COLORS.blueDeep }} title="เลื่อนสถานะ">
+                        <IconChevronsRight size={16} />
+                      </button>
+                   )}
+                 </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      );
+    });
+
+    // ==========================================
+    // 📅 COMPONENT: CalendarView
+    // ==========================================
+    const CalendarView = React.memo(({ currentMonth, setCurrentMonth, selectedDate, setSelectedDate, today, tasks }) => {
+      const year = currentMonth.getFullYear();
+      const month = currentMonth.getMonth();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      const firstDay = new Date(year, month, 1).getDay(); 
+
+      const days = [];
+      for (let i = 0; i < firstDay; i++) days.push(null); 
+      for (let i = 1; i <= daysInMonth; i++) days.push(i);
+
+      const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+      return (
+        <div className="backdrop-blur-xl rounded-[32px] p-5 shadow-lg mb-5 animate-fadeIn border-[3px]" style={{ backgroundColor: `${COLORS.calendarBg}f9`, borderColor: COLORS.cardBorder, boxShadow: '0 15px 30px -5px rgba(161, 60, 54, 0.2)' }}>
+          <div className="flex justify-between items-center mb-4 px-2">
+            <button onClick={() => setCurrentMonth(new Date(year, month - 1, 1))} className="p-1.5 rounded-full transition-colors hover:bg-[#F2D7D5]" style={{ color: COLORS.pinkDeep }}><IconChevronLeft size={22}/></button>
+            <h3 className="font-black text-[18px] tracking-widest" style={{ color: COLORS.pinkDeep }}>{monthNames[month]} {year}</h3>
+            <button onClick={() => setCurrentMonth(new Date(year, month + 1, 1))} className="p-1.5 rounded-full transition-colors hover:bg-[#F2D7D5]" style={{ color: COLORS.pinkDeep }}><IconChevronRight size={22}/></button>
+          </div>
+          
+          <div className="grid grid-cols-7 gap-1 text-center mb-3 bg-[#F2D7D5] py-2 rounded-xl">
+            {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(d => (
+              <div key={d} className="text-[10px] font-black uppercase" style={{ color: COLORS.pinkDeep }}>{d}</div>
+            ))}
+          </div>
+          
+          <div className="grid grid-cols-7 gap-y-3 gap-x-1 text-center">
+            {days.map((day, index) => {
+              if (!day) return <div key={`empty-${index}`} className="h-10"></div>;
+              
+              const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+              const isSelected = selectedDate === dateStr;
+              const isToday = today === dateStr;
+              const hasTasks = tasks.some(t => t.deadline === dateStr); 
+
+              return (
+                <div key={dateStr} className="flex justify-center items-center h-10">
+                  <div 
+                    onClick={() => setSelectedDate(dateStr)} 
+                    className={`relative w-10 h-10 flex flex-col items-center justify-center cursor-pointer transition-all ${
+                      isSelected 
+                        ? 'text-white rounded-full font-black shadow-lg scale-110'
+                        : isToday 
+                          ? 'font-black rounded-full shadow-sm'
+                          : 'font-bold hover:bg-[#F2D7D5] rounded-full'
+                    }`}
+                    style={
+                      isSelected ? { backgroundColor: COLORS.pinkDeep, borderWidth: '2px', borderColor: COLORS.pinkDeep } 
+                      : isToday ? { color: COLORS.pinkDeep, backgroundColor: COLORS.purple, borderWidth: '2px', borderColor: COLORS.pinkDeep } 
+                      : { color: COLORS.textSoft, borderWidth: '0px' }
+                    }
+                  >
+                    <span className="text-[14px] z-10 leading-none">{day}</span>
+                    {hasTasks && (
+                      <div className="absolute bottom-1 w-1.5 h-1.5 rounded-full" style={{ backgroundColor: isSelected ? COLORS.white : COLORS.pinkDeep }}></div> 
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      );
+    });
+
+    // ==========================================
+    // 🏠 MAIN APP COMPONENT
+    // ==========================================
+    function App() {
+      const [tasks, setTasks] = useState([]);
+      const [taskTypes, setTaskTypes] = useState(['Logo', 'Banner', 'Artwork']); 
+      const [channels, setChannels] = useState(['LINE', 'FB', 'IG']); 
+      
+      const [isLoading, setIsLoading] = useState(true);
+      const [isSaving, setIsSaving] = useState(false); 
+      
+      const [view, setView] = useState('dashboard');
+      const [isCalendarView, setIsCalendarView] = useState(false);
+      const [currentMonth, setCurrentMonth] = useState(new Date());
+      const [selectedDate, setSelectedDate] = useState(() => {
+        const d = new Date();
+        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+      });
+      
+      const [showModal, setShowModal] = useState(false);     
+      const [editingTask, setEditingTask] = useState(null);  
+      const [taskToDelete, setTaskToDelete] = useState(null);
+      const [showAuthModal, setShowAuthModal] = useState(false);   
+      const [showImageModal, setShowImageModal] = useState(false); 
+      const [showBannerModal, setShowBannerModal] = useState(false); 
+      
+      const [searchQuery, setSearchQuery] = useState('');
+      const [filterType, setFilterType] = useState('all');
+      
+      const [isAdmin, setIsAdmin] = useState(false);
+      const [password, setPassword] = useState('');
+      const [authError, setAuthError] = useState(false);
+      const [isVerifyingAuth, setIsVerifyingAuth] = useState(false);
+      
+      const [profileImage, setProfileImage] = useState(null);
+      const [tempImageUrl, setTempImageUrl] = useState('');   
+      const [bannerImage, setBannerImage] = useState(null);   
+      const [tempBannerUrl, setTempBannerUrl] = useState(''); 
+      const [isBannerVisible, setIsBannerVisible] = useState(true);
+      
+      const [selectedNextDate, setSelectedNextDate] = useState(''); 
+      const [isBouncing, setIsBouncing] = useState(false); 
+
+      // 🏪 โหมดเปิดปิดร้าน
+      const [showStoreModal, setShowStoreModal] = useState(false);
+      const [storeSettings, setStoreSettings] = useState(() => {
+        const saved = localStorage.getItem('kosame_storeSettings');
+        return saved ? JSON.parse(saved) : {
+          mode: 'auto', 
+          openTime: '07:00',
+          closeTime: '21:00',
+          openText: 'เปิดร้านพร้อมรับคิวค่าา 🌸',
+          closeText: 'ปิดร้านค้าบไว้มาใหม่น้าา'
+        };
+      });
+      const [tempStore, setTempStore] = useState(storeSettings);
+      const [currentTime, setCurrentTime] = useState(new Date());
+
+      // 🔗 โหมดลิงก์ติดต่อ
+      const [showLinkModal, setShowLinkModal] = useState(false);
+      const [contactLinks, setContactLinks] = useState(() => {
+        const saved = localStorage.getItem('kosame_contactLinks');
+        return saved ? JSON.parse(saved) : { facebook: '', discord: '', tiktok: '' };
+      });
+      const [tempLinks, setTempLinks] = useState(contactLinks);
+
+      // 📝 ช่องโน๊ต
+      const [dashboardNote, setDashboardNote] = useState(() => localStorage.getItem('kosame_note') || '');
+      const handleNoteChange = (e) => {
+        setDashboardNote(e.target.value);
+        localStorage.setItem('kosame_note', e.target.value);
+      };
+
+      // 🕒 เช็คเวลา
+      useEffect(() => {
+        const timer = setInterval(() => setCurrentTime(new Date()), 60000);
+        return () => clearInterval(timer);
+      }, []);
+
+      const checkIsStoreOpen = () => {
+        if (storeSettings.mode === 'always_open') return true;
+        if (storeSettings.mode === 'always_closed') return false;
+
+        const now = currentTime;
+        const currentMinutes = now.getHours() * 60 + now.getMinutes();
+        
+        const [openH, openM] = storeSettings.openTime.split(':').map(Number);
+        const openMinutes = openH * 60 + openM;
+        
+        const [closeH, closeM] = storeSettings.closeTime.split(':').map(Number);
+        const closeMinutes = closeH * 60 + closeM;
+
+        if (closeMinutes < openMinutes) {
+          return currentMinutes >= openMinutes || currentMinutes <= closeMinutes;
+        }
+        return currentMinutes >= openMinutes && currentMinutes <= closeMinutes;
+      };
+
+      const isStoreOpen = checkIsStoreOpen();
+      const storeStatusText = isStoreOpen ? storeSettings.openText : storeSettings.closeText;
+
+      const saveStoreSettings = () => {
+        setStoreSettings(tempStore);
+        localStorage.setItem('kosame_storeSettings', JSON.stringify(tempStore));
+        setShowStoreModal(false);
+      };
+
+      const safeLowerCase = (str) => {
+        return str && typeof str === 'string' ? str.toLowerCase() : '';
+      };
+
+      const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxvvfFAYDq1K8YrLMFaiJImDahgXTIkdBApbXOxCtnmKWGHXy3oK6SbCGS3bUb6OmME/exec";
+
+      const fetchAPI = async (payload) => {
+        try {
+          const res = await fetch(WEB_APP_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(payload)
+          });
+          return await res.json();
+        } catch (error) {
+          console.error("API Error:", error);
+          throw error;
+        }
+      };
+
+      useEffect(() => {
+        document.title = "KOSAME"; 
+        
+        fetch(WEB_APP_URL + "?action=getInitialData")
+          .then(res => res.json())
+          .then(response => {
+            if (response.status === 'success') {
+              setTasks(response.data.tasks || []);
+              if (response.data.taskTypes && response.data.taskTypes.length > 0) setTaskTypes(response.data.taskTypes);
+              if (response.data.channels && response.data.channels.length > 0) setChannels(response.data.channels);
+              if (response.data.profileImage) setProfileImage(response.data.profileImage);
+              if (response.data.bannerImage) setBannerImage(response.data.bannerImage);
+              if (response.data.bannerVisible !== undefined) setIsBannerVisible(response.data.bannerVisible);
+              if (response.data.lockedNextDate) setSelectedNextDate(response.data.lockedNextDate);
+            }
+            setIsLoading(false);
+          })
+          .catch(error => {
+            console.error("Error loading data:", error);
+            setIsLoading(false);
+          });
+      }, []);
+
+      const handleAdminLogin = (e) => {
+        e.preventDefault();
+        setIsVerifyingAuth(true);
+        setAuthError(false);
+
+        fetchAPI({ action: 'verifyAdminPassword', inputPassword: password })
+          .then(res => {
+            setIsVerifyingAuth(false);
+            if (res.isValid) {
+              setIsAdmin(true); setShowAuthModal(false); setPassword(''); setAuthError(false);
+            } else setAuthError(true);
+          })
+          .catch(() => { setIsVerifyingAuth(false); setAuthError(true); });
+      };
+
+      const handleSetManualDate = useCallback((dateVal) => {
+        setSelectedNextDate(dateVal);
+        fetchAPI({ action: 'saveLockedNextDate', dateStr: dateVal }); 
+      }, []);
+      
+      const today = useMemo(() => {
+        const d = new Date();
+        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+      }, []); 
+      
+      const todayTasks = useMemo(() => tasks.filter(t => t.deadline === today), [tasks, today]);
+      
+      const doneToday = useMemo(() => todayTasks.filter(t => getNormalizedStatus(t.status) === 'ready for delivery').length, [todayTasks]);
+      const progress = todayTasks.length === 0 ? 0 : Math.round((doneToday / todayTasks.length) * 100);
+
+      const nextQueueDate = useMemo(() => {
+        if (selectedNextDate) return selectedNextDate;
+        let checkDate = new Date();
+        for (let i = 0; i < 365; i++) {
+          const y = checkDate.getFullYear(); 
+          const m = String(checkDate.getMonth() + 1).padStart(2, '0'); 
+          const d = String(checkDate.getDate()).padStart(2, '0'); 
+          const dateStr = `${y}-${m}-${d}`;
+          const tasksOnDate = tasks.filter(t => t.deadline === dateStr);
+          if (tasksOnDate.length === 0) return dateStr;
+          checkDate.setDate(checkDate.getDate() + 1);
+        }
+        return today;
+      }, [tasks, selectedNextDate]);
+
+      const waitingCount = useMemo(() => tasks.filter(t => getNormalizedStatus(t.status) !== 'ready for delivery').length, [tasks]);
+
+      const cycleStatus = useCallback((e, id) => {
+        e.stopPropagation();
+        setTasks(prev => prev.map(t => {
+          if (t.id === id) {
+            const currentStatus = getNormalizedStatus(t.status);
+            const currentIndex = TASK_STATUSES.findIndex(s => s.id === currentStatus);
+            const nextIndex = currentIndex < TASK_STATUSES.length - 1 ? currentIndex + 1 : 0;
+            const newStatus = TASK_STATUSES[nextIndex].id;
+            fetchAPI({ action: 'updateTaskStatus', taskId: id, newStatus: newStatus });
+            return { ...t, status: newStatus };
+          }
+          return t;
+        }));
+      }, []);
+
+      const handleEditTask = useCallback((task) => {
+        setEditingTask(task);
+        setShowModal(true);
+      }, []);
+
+      const handleSaveTask = (e) => {
+        e.preventDefault();
+        setIsSaving(true);
+        const formData = new FormData(e.target);
+        
+        const taskData = {
+          id: editingTask ? editingTask.id : null,
+          title: '', 
+          client: formData.get('client'),
+          type: formData.get('type'), 
+          channel: formData.get('channel'),
+          admin: formData.get('admin'),
+          status: formData.get('status') || 'waiting in queue',
+          priority: formData.get('priority') ? 'urgent' : 'normal', 
+          startDate: formData.get('startDate'),
+          deadline: formData.get('deadline'),
+          details: formData.get('details'),
+        };
+
+        fetchAPI({ action: 'saveOrUpdateTask', task: taskData })
+          .then(res => {
+             if (res.status === 'success') {
+                setTasks(prev => editingTask ? prev.map(t => t.id === res.task.id ? res.task : t) : [...prev, res.task]);
+             }
+             setIsSaving(false); setShowModal(false); setEditingTask(null);
+          })
+          .catch(() => { setIsSaving(false); });
+      };
+
+      const executeDeleteTask = () => {
+        if (!taskToDelete) return;
+        setIsSaving(true);
+        fetchAPI({ action: 'deleteTask', taskId: taskToDelete })
+          .then(() => {
+             setTasks(prev => prev.filter(t => t.id !== taskToDelete));
+             setIsSaving(false); setShowModal(false); setEditingTask(null); setTaskToDelete(null);
+          })
+          .catch(() => { setIsSaving(false); });
+      };
+
+      const toggleBannerVisibility = (visible) => {
+        setIsBannerVisible(visible);
+        fetchAPI({ action: 'saveBannerVisibility', isVisible: visible });
+      };
+
+      const triggerFlowerBounce = useCallback(() => { setIsBouncing(true); setTimeout(() => setIsBouncing(false), 500); }, []);
+      const handleImageUpload = useCallback(() => { setShowImageModal(true); }, []);
+
+      const filteredAllTasks = useMemo(() => tasks.filter(t => {
+        const query = safeLowerCase(searchQuery);
+        const matchSearch = safeLowerCase(t.type).includes(query) || safeLowerCase(t.client).includes(query);
+        const normStatus = getNormalizedStatus(t.status);
+        const matchFilter = filterType === 'all' || 
+                            (filterType === 'pending' && normStatus !== 'ready for delivery') || 
+                            (filterType === 'done' && normStatus === 'ready for delivery');
+        return matchSearch && matchFilter;
+      }), [tasks, searchQuery, filterType]);
+
+      const displayedTasks = isCalendarView 
+        ? filteredAllTasks.filter(t => t.deadline === selectedDate) 
+        : filteredAllTasks;
+
+      if (isLoading) {
+        return (
+          <div className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden" style={{ backgroundColor: COLORS.bg }}>
+             <DynamicBackground />
+             <div className="flex flex-col items-center z-10 animate-breathe">
+               <div className="flex items-center gap-2 px-8 py-3 backdrop-blur-md rounded-full shadow-lg border-2" style={{ backgroundColor: `${COLORS.white}ee`, borderColor: COLORS.pinkDeep }}>
+                 <p className="text-[14px] font-black tracking-widest" style={{ color: COLORS.pinkDeep }}>กำลังโหลดข้อมูล</p>
+                 <div className="flex gap-1.5 pt-1 ml-2">
+                   <span className="w-2 h-2 rounded-full animate-bounce" style={{ backgroundColor: COLORS.pinkDeep, animationDelay: '0s' }}></span>
+                   <span className="w-2 h-2 rounded-full animate-bounce" style={{ backgroundColor: COLORS.purple, animationDelay: '0.15s' }}></span>
+                   <span className="w-2 h-2 rounded-full animate-bounce" style={{ backgroundColor: COLORS.blueDeep, animationDelay: '0.3s' }}></span>
+                 </div>
+               </div>
+             </div>
+          </div>
+        );
+      }
+
+      return (
+        <div className="min-h-screen font-sans relative" style={{ backgroundColor: COLORS.bg, color: COLORS.textMain }}>
+          
+          <DynamicBackground />
+          
+          <div className={`fixed inset-0 pointer-events-none z-0 transition-all duration-700 ${isStoreOpen ? 'bg-transparent backdrop-blur-none' : 'bg-black/25 backdrop-blur-[1.5px]'}`}></div>
+          
+          <div className="max-w-md mx-auto min-h-screen relative pb-28 z-10">
+            <Header isAdmin={isAdmin} setIsAdmin={setIsAdmin} setShowAuthModal={setShowAuthModal} handleImageUpload={handleImageUpload} profileImage={profileImage} />
+            
+            {/* ===== Banner Section ===== */}
+            <div className="px-5 relative z-10 mb-4">
+               
+               {/* แถบสถานะเปิด-ปิดร้าน */}
+               <div 
+                 onClick={() => { if (isAdmin) { setTempStore(storeSettings); setShowStoreModal(true); } }}
+                 className={`px-4 py-2.5 rounded-[20px] mb-3 shadow-sm border-[2px] flex items-center justify-center transition-all duration-500 ${isAdmin ? 'cursor-pointer hover:scale-[1.02]' : ''}`}
+                 style={{
+                   backgroundColor: isStoreOpen ? '#798E61' : '#A13C36',
+                   borderColor: isStoreOpen ? '#798E61' : '#A13C36',
+                   color: '#FFFFFF'
+                 }}
+               >
+                 <span className="text-[12px] font-black tracking-wide flex items-center gap-2">
+                   <span className="animate-pulse">{isStoreOpen ? '🟢' : '🔴'}</span> {storeStatusText}
+                 </span>
+                 {isAdmin && <span className="absolute right-4 opacity-80 hover:opacity-100"><IconSettings size={16} /></span>}
+               </div>
+
+               {bannerImage && isBannerVisible && (
+                 <div className="relative group w-full h-32 rounded-[24px] overflow-hidden shadow-lg border-[3px]" style={{ borderColor: COLORS.cardBorder, backgroundColor: COLORS.cardWhite }}>
+                    <img src={bannerImage} alt="Shop Banner" className="w-full h-full object-cover" />
+                    <div className="absolute top-2 right-2 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                       {isAdmin && (
+                         <button onClick={() => setShowBannerModal(true)} className="p-1.5 backdrop-blur-md rounded-full shadow-md transition-colors text-white" style={{ backgroundColor: `${COLORS.pinkDeep}ee` }} title="เปลี่ยนแบนเนอร์">
+                            <IconImage size={16} />
+                         </button>
+                       )}
+                       {isAdmin && (
+                         <button onClick={() => toggleBannerVisibility(false)} className="p-1.5 backdrop-blur-md rounded-full shadow-md transition-colors text-white" style={{ backgroundColor: `${COLORS.pinkDeep}ee` }} title="ซ่อนแบนเนอร์">
+                            <IconEyeOff size={16} />
+                         </button>
+                       )}
+                    </div>
+                 </div>
+               )}
+
+               {bannerImage && !isBannerVisible && isAdmin && (
+                 <div className="flex justify-end mb-1">
+                    <button onClick={() => toggleBannerVisibility(true)} className="text-[10px] font-bold flex items-center gap-1.5 px-3 py-1.5 rounded-full shadow-md hover:scale-105 transition-all text-white" style={{ backgroundColor: COLORS.pinkDeep }}>
+                       <IconEye size={12} /> แสดงแบนเนอร์
+                    </button>
+                 </div>
+               )}
+
+               {!bannerImage && isAdmin && (
+                 <div onClick={() => setShowBannerModal(true)} className="w-full h-16 rounded-[24px] border-[3px] border-dashed flex items-center justify-center cursor-pointer hover:bg-white/50 transition-colors shadow-sm" style={{ borderColor: COLORS.cardBorder, backgroundColor: `${COLORS.cardWhite}99` }}>
+                    <span className="text-[11px] font-black flex items-center gap-2" style={{ color: COLORS.pinkDeep }}><IconPlus size={16}/> เพิ่มรูปแบนเนอร์ร้าน</span>
+                 </div>
+               )}
+            </div>
+            
+            {/* ===== Main Content ===== */}
+            <div className="px-5 relative z-10">
+              {view === 'dashboard' ? (
+                <div className="animate-fadeIn">
+                  
+                  <div className="flex gap-3 h-28 mb-3">
+                    <div className="flex-[1.6]">
+                      <CompactStats isAdmin={isAdmin} selectedNextDate={selectedNextDate} nextQueueDate={nextQueueDate} handleSetManualDate={handleSetManualDate} waitingCount={waitingCount} />
+                    </div>
+                    <div className="flex-1">
+                      <ProgressImage progress={progress} todayTasksLength={todayTasks.length} doneToday={doneToday} triggerFlowerBounce={triggerFlowerBounce} isBouncing={isBouncing} />
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3 h-[42px] mb-4">
+                    <div className="flex-[1.6] relative">
+                       <input 
+                         type="text" 
+                         placeholder="โน๊ตข้อความ..." 
+                         value={dashboardNote} 
+                         onChange={handleNoteChange} 
+                         className="w-full h-full rounded-[16px] px-4 outline-none text-[11px] font-bold shadow-sm transition-all border-[2px] focus:border-[#A13C36]" 
+                         style={{ backgroundColor: COLORS.white, borderColor: COLORS.cardBorder, color: COLORS.textMain }} 
+                       />
+                    </div>
+                    <div className="flex-1 flex gap-1.5 justify-between items-center relative">
+                       {isAdmin && (
+                          <button onClick={() => { setTempLinks(contactLinks); setShowLinkModal(true); }} className="absolute -top-2 -right-2 text-white rounded-full p-1 shadow-md z-20 hover:scale-110 transition-transform" style={{ backgroundColor: COLORS.pinkDeep }}>
+                             <IconSettings size={12} />
+                          </button>
+                       )}
+                       <a href={contactLinks.facebook || '#'} target="_blank" className="w-[42px] h-[42px] shrink-0 rounded-[14px] flex items-center justify-center shadow-sm border-[2px] hover:scale-105 transition-all text-[#A13C36]" style={{ backgroundColor: COLORS.white, borderColor: COLORS.cardBorder }}>
+                          <IconFacebook size={20}/>
+                       </a>
+                       <a href={contactLinks.discord || '#'} target="_blank" className="w-[42px] h-[42px] shrink-0 rounded-[14px] flex items-center justify-center shadow-sm border-[2px] hover:scale-105 transition-all text-[#A13C36]" style={{ backgroundColor: COLORS.white, borderColor: COLORS.cardBorder }}>
+                          <IconDiscord size={20}/>
+                       </a>
+                       <a href={contactLinks.tiktok || '#'} target="_blank" className="w-[42px] h-[42px] shrink-0 rounded-[14px] flex items-center justify-center shadow-sm border-[2px] hover:scale-105 transition-all text-[#A13C36]" style={{ backgroundColor: COLORS.white, borderColor: COLORS.cardBorder }}>
+                          <IconTikTok size={17}/>
+                       </a>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between mb-2.5 ml-1">
+                    <h2 className="text-[10px] font-black italic uppercase tracking-[0.2em]" style={{ color: COLORS.pinkDeep }}>Today's Task</h2>
+                    <div className="h-[2px] flex-1 mx-3 rounded-full" style={{ backgroundColor: COLORS.cardBorder, opacity: 0.5 }}></div>
+                  </div>
+                  <div className="space-y-1">
+                    {todayTasks.length > 0 ? todayTasks.map(t => <TaskCard key={t.id} task={t} isAdmin={isAdmin} onEdit={handleEditTask} onCycleStatus={cycleStatus} />) : (
+                      <div className="text-center py-10 rounded-[28px] border-[3px] border-dashed bg-white/50" style={{ borderColor: COLORS.cardBorder }}>
+                        <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: COLORS.pinkDeep }}>Sky is clear ✨</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <div className="animate-fadeIn">
+                  <div className="relative mb-3">
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2" style={{ color: COLORS.pinkDeep }}><IconSearch size={16} /></div>
+                    <input type="text" placeholder="ค้นหาคิวงาน..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full rounded-[22px] py-3 pl-10 pr-4 outline-none text-xs font-bold shadow-lg transition-all border-2 focus:border-[#A13C36]" style={{ backgroundColor: COLORS.white, borderColor: COLORS.cardBorder, color: COLORS.textMain }} />
+                  </div>
+                  
+                  <div className="flex gap-2 mb-3 p-1.5 rounded-full shadow-md border-2 overflow-x-auto hide-scrollbar" style={{ backgroundColor: COLORS.white, borderColor: COLORS.cardBorder }}>
+                      <button onClick={() => setFilterType('all')} className={`flex-1 min-w-[60px] text-[9px] font-black py-2 rounded-full transition-all tracking-wider shadow-sm`} style={{ color: filterType === 'all' ? COLORS.white : COLORS.textSoft, backgroundColor: filterType === 'all' ? COLORS.pinkDeep : 'transparent' }}>ทั้งหมด</button>
+                      <button onClick={() => setFilterType('pending')} className={`flex-1 min-w-[80px] text-[9px] font-black py-2 rounded-full transition-all tracking-wider shadow-sm`} style={{ color: filterType === 'pending' ? COLORS.textMain : COLORS.textSoft, backgroundColor: filterType === 'pending' ? COLORS.purple : 'transparent' }}>ยังไม่ได้เริ่ม</button>
+                      <button onClick={() => setFilterType('done')} className={`flex-1 min-w-[70px] text-[9px] font-black py-2 rounded-full transition-all tracking-wider shadow-sm`} style={{ color: filterType === 'done' ? COLORS.white : COLORS.textSoft, backgroundColor: filterType === 'done' ? COLORS.blueDeep : 'transparent' }}>เสร็จแล้ว</button>
+                  </div>
+
+                  <div className="flex justify-end mb-3 pr-1">
+                    <button onClick={() => { 
+                      const newView = !isCalendarView;
+                      setIsCalendarView(newView); 
+                      if(newView) setFilterType('all'); 
+                    }} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full shadow-md text-[9px] font-black uppercase tracking-widest transition-all active:scale-95 border-2" style={{ color: COLORS.pinkDeep, backgroundColor: COLORS.white, borderColor: COLORS.pinkDeep }}>
+                      {isCalendarView ? <><IconList size={14} /> รูปแบบรายการ</> : <><IconCalendar size={14} /> รูปแบบปฏิทิน</>}
+                    </button>
+                  </div>
+
+                  {isCalendarView && <CalendarView currentMonth={currentMonth} setCurrentMonth={setCurrentMonth} selectedDate={selectedDate} setSelectedDate={setSelectedDate} today={today} tasks={tasks} />}
+
+                  <div className="space-y-1">
+                    {displayedTasks.length > 0 ? displayedTasks.map(t => <TaskCard key={t.id} task={t} isAdmin={isAdmin} onEdit={handleEditTask} onCycleStatus={cycleStatus} />) : (
+                      <div className="text-center py-10 rounded-[28px] border-[3px] border-dashed shadow-sm mt-3 bg-white/50" style={{ borderColor: COLORS.cardBorder }}>
+                        <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: COLORS.pinkDeep }}>
+                          {isCalendarView ? "วันนี้คิวว่าง ✨" : "No records found ✨"}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* ===== Bottom Navigation Bar ===== */}
+            <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-full max-w-[210px] z-50">
+              <div className="rounded-full h-14 shadow-2xl flex items-center justify-between px-6 relative border-[3px]" style={{ backgroundColor: COLORS.white, borderColor: COLORS.pinkDeep, boxShadow: '0 25px 50px -12px rgba(161, 60, 54, 0.4)' }}>
+                  <button onClick={() => setView('dashboard')} className={`p-2 transition-all ${view === 'dashboard' ? 'scale-110 drop-shadow-md' : 'opacity-40'}`} style={{ color: view === 'dashboard' ? COLORS.pinkDeep : COLORS.textSoft }}>
+                    <IconHome size={22} />
+                  </button>
+                  <div className="w-8"></div>
+                  <button onClick={() => setView('all')} className={`p-1 transition-all ${view === 'all' ? 'scale-110 drop-shadow-md' : 'opacity-40'}`} style={{ color: view === 'all' ? COLORS.pinkDeep : COLORS.textSoft }}>
+                    <IconFileText size={22} />
+                  </button>
+                  {isAdmin && (
+                    <div className="absolute left-1/2 -translate-x-1/2 -top-6">
+                      <button onClick={() => { setEditingTask(null); setShowModal(true); }} className="w-14 h-14 rounded-full text-white flex items-center justify-center shadow-xl active:scale-95 transition-transform border-[4px]" style={{ backgroundColor: COLORS.pinkDeep, borderColor: COLORS.white, boxShadow: '0 20px 25px -5px rgba(161, 60, 54, 0.5)' }}>
+                        <IconPlus size={24} />
+                      </button>
+                    </div>
+                  )}
+              </div>
+            </div>
+
+            {/* ==========================================
+                🪟 MODAL: ตั้งค่าเปิด-ปิดร้าน
+                ========================================== */}
+            {showStoreModal && (
+              <div className="fixed inset-0 z-[120] flex items-center justify-center p-6 bg-black/30 backdrop-blur-sm animate-fadeIn">
+                <div className="w-full max-w-xs rounded-[35px] p-6 shadow-2xl animate-slideUp border-[3px] bg-white relative" style={{ borderColor: COLORS.pinkDeep }}>
+                  <h3 className="text-[16px] font-black mb-5 text-center" style={{ color: COLORS.textMain }}>ตั้งค่าเปิด-ปิดร้าน 🏪</h3>
+                  
+                  <div className="space-y-4">
+                    <div>
+                      <label className="text-[10px] font-black text-gray-500 mb-1 block tracking-wider">โหมดการเปิดร้าน</label>
+                      <div className="flex bg-[#FFF5F6] p-1 rounded-xl border border-[#FFD2E6]">
+                        <button onClick={() => setTempStore({...tempStore, mode: 'auto'})} className={`flex-1 text-[10px] font-black py-2.5 rounded-lg transition-all ${tempStore.mode === 'auto' ? 'bg-white shadow-sm text-[#798E61]' : 'text-gray-400'}`}>เวลาออโต้</button>
+                        <button onClick={() => setTempStore({...tempStore, mode: 'always_open'})} className={`flex-1 text-[10px] font-black py-2.5 rounded-lg transition-all ${tempStore.mode === 'always_open' ? 'bg-white shadow-sm text-[#798E61]' : 'text-gray-400'}`}>เปิดเสมอ</button>
+                        <button onClick={() => setTempStore({...tempStore, mode: 'always_closed'})} className={`flex-1 text-[10px] font-black py-2.5 rounded-lg transition-all ${tempStore.mode === 'always_closed' ? 'bg-white shadow-sm text-[#A13C36]' : 'text-gray-400'}`}>ปิดเสมอ</button>
+                      </div>
+                    </div>
+
+                    <div className={`flex gap-2 transition-opacity ${tempStore.mode !== 'auto' ? 'opacity-50 pointer-events-none' : ''}`}>
+                      <div className="flex-1">
+                        <label className="text-[10px] font-black text-gray-500 mb-1 block tracking-wider">เวลาเปิด (Auto)</label>
+                        <input type="time" value={tempStore.openTime} onChange={(e) => setTempStore({...tempStore, openTime: e.target.value})} className="w-full p-2.5 rounded-xl border-2 outline-none text-[12px] font-black shadow-sm text-center" style={{ borderColor: COLORS.cardBorder, color: COLORS.textMain }} />
+                      </div>
+                      <div className="flex-1">
+                        <label className="text-[10px] font-black text-gray-500 mb-1 block tracking-wider">เวลาปิด (Auto)</label>
+                        <input type="time" value={tempStore.closeTime} onChange={(e) => setTempStore({...tempStore, closeTime: e.target.value})} className="w-full p-2.5 rounded-xl border-2 outline-none text-[12px] font-black shadow-sm text-center" style={{ borderColor: COLORS.cardBorder, color: COLORS.textMain }} />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="text-[10px] font-black text-gray-500 mb-1 block tracking-wider">ข้อความตอนเปิดร้าน</label>
+                      <input type="text" value={tempStore.openText} onChange={(e) => setTempStore({...tempStore, openText: e.target.value})} className="w-full p-3 rounded-xl border-2 outline-none text-[11px] font-bold shadow-sm focus:border-[#A13C36]" style={{ borderColor: COLORS.cardBorder, color: COLORS.textMain }} />
+                    </div>
+                    <div>
+                      <label className="text-[10px] font-black text-gray-500 mb-1 block tracking-wider">ข้อความตอนปิดร้าน</label>
+                      <input type="text" value={tempStore.closeText} onChange={(e) => setTempStore({...tempStore, closeText: e.target.value})} className="w-full p-3 rounded-xl border-2 outline-none text-[11px] font-bold shadow-sm focus:border-[#A13C36]" style={{ borderColor: COLORS.cardBorder, color: COLORS.textMain }} />
+                    </div>
+
+                    <div className="pt-2">
+                      <button onClick={saveStoreSettings} className="w-full py-3.5 rounded-2xl font-black text-[13px] text-white shadow-lg active:scale-95 transition-all" style={{ backgroundColor: COLORS.pinkDeep }}>บันทึกและปิด (ชั่วคราว)</button>
+                      <button onClick={() => setShowStoreModal(false)} className="w-full mt-3 text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-gray-600">ยกเลิก</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ==========================================
+                🪟 MODAL: ตั้งค่าลิงก์ติดต่อ
+                ========================================== */}
+            {showLinkModal && (
+              <div className="fixed inset-0 z-[120] flex items-center justify-center p-6 bg-black/30 backdrop-blur-sm animate-fadeIn">
+                <div className="w-full max-w-xs rounded-[35px] p-6 shadow-2xl animate-slideUp border-[3px] bg-white relative" style={{ borderColor: COLORS.pinkDeep }}>
+                  <h3 className="text-[16px] font-black mb-5 text-center" style={{ color: COLORS.textMain }}>ตั้งค่าลิงก์ติดต่อ 🔗</h3>
+                  <div className="space-y-3">
+                    <div>
+                      <label className="text-[10px] font-black text-gray-500 mb-1 block tracking-wider">Facebook URL</label>
+                      <input type="url" value={tempLinks.facebook} onChange={(e) => setTempLinks({...tempLinks, facebook: e.target.value})} className="w-full p-3 rounded-xl border-2 outline-none text-[11px] font-bold shadow-sm focus:border-[#A13C36]" style={{ borderColor: COLORS.cardBorder, color: COLORS.textMain }} placeholder="https://..." />
+                    </div>
+                    <div>
+                      <label className="text-[10px] font-black text-gray-500 mb-1 block tracking-wider">Discord URL</label>
+                      <input type="url" value={tempLinks.discord} onChange={(e) => setTempLinks({...tempLinks, discord: e.target.value})} className="w-full p-3 rounded-xl border-2 outline-none text-[11px] font-bold shadow-sm focus:border-[#A13C36]" style={{ borderColor: COLORS.cardBorder, color: COLORS.textMain }} placeholder="https://..." />
+                    </div>
+                    <div>
+                      <label className="text-[10px] font-black text-gray-500 mb-1 block tracking-wider">TikTok URL</label>
+                      <input type="url" value={tempLinks.tiktok} onChange={(e) => setTempLinks({...tempLinks, tiktok: e.target.value})} className="w-full p-3 rounded-xl border-2 outline-none text-[11px] font-bold shadow-sm focus:border-[#A13C36]" style={{ borderColor: COLORS.cardBorder, color: COLORS.textMain }} placeholder="https://..." />
+                    </div>
+                    <div className="pt-3">
+                      <button onClick={() => { setContactLinks(tempLinks); localStorage.setItem('kosame_contactLinks', JSON.stringify(tempLinks)); setShowLinkModal(false); }} className="w-full py-3.5 rounded-2xl font-black text-[13px] text-white shadow-lg active:scale-95 transition-all" style={{ backgroundColor: COLORS.pinkDeep }}>บันทึก</button>
+                      <button onClick={() => setShowLinkModal(false)} className="w-full mt-3 text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-gray-600">ยกเลิก</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ==========================================
+                🪟 MODAL: เพิ่ม/แก้ไขงาน 
+                ========================================== */}
+            {showModal && (
+              <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/30 backdrop-blur-sm animate-fadeIn">
+                <form onSubmit={handleSaveTask} className="w-full max-w-xs rounded-[35px] p-6 shadow-2xl animate-slideUp border-[3px] relative overflow-hidden" style={{ backgroundColor: COLORS.white, borderColor: COLORS.pinkDeep }}>
+                   
+                   {editingTask && (
+                     <button type="button" onClick={() => setTaskToDelete(editingTask.id)} className="absolute top-4 right-4 w-9 h-9 flex items-center justify-center rounded-xl text-red-300 hover:text-red-500 hover:bg-red-50 active:scale-95 transition-all" title="ลบคิวงาน">
+                       <IconTrash size={20} />
+                     </button>
+                   )}
+
+                   <h3 className="text-[14px] font-black mb-4 text-center" style={{ color: COLORS.pinkDeep }}>{editingTask ? 'แก้ไขคิวงาน 🎀' : 'เพิ่มคิวใหม่ 🎀'}</h3>
+                   <div className="space-y-2 relative">
+                     {isSaving && (
+                        <div className="absolute inset-0 z-50 flex flex-col items-center justify-center rounded-2xl bg-white/80 backdrop-blur-sm">
+                           <IconLoader size={32} className="animate-spin-slow" style={{ color: COLORS.pinkDeep }} />
+                           <span className="text-[10px] font-black mt-2" style={{ color: COLORS.pinkDeep }}>กำลังบันทึก...</span>
+                        </div>
+                     )}
+                     
+                     <div className="flex justify-end mb-1">
+                       <label className="flex items-center cursor-pointer gap-2 px-3 py-1.5 rounded-full shadow-sm border-2" style={{ backgroundColor: COLORS.bg, borderColor: COLORS.cardBorder }}>
+                         <span className="text-[10px] font-black" style={{ color: COLORS.pinkDeep }}>คิวด่วน 🔥</span>
+                         <div className="relative">
+                           <input type="checkbox" name="priority" value="urgent" defaultChecked={editingTask?.priority === 'urgent'} className="sr-only peer" />
+                           <div className={`w-8 h-4 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-[#A13C36]`}></div>
+                         </div>
+                       </label>
+                     </div>
+
+                     <input name="client" required defaultValue={editingTask?.client || ''} className="w-full p-3.5 rounded-2xl border-2 outline-none text-[11px] font-bold shadow-sm transition-all focus:border-[#A13C36]" style={{ backgroundColor: COLORS.bg, borderColor: COLORS.cardBorder, color: COLORS.textMain }} placeholder="ชื่อลูกค้า" />
+                     
+                     <div className="grid grid-cols-2 gap-2">
+                        <input list="taskTypesList" name="type" required defaultValue={editingTask?.type || ''} className="w-full p-3.5 rounded-2xl font-black text-[10px] outline-none border-2 shadow-sm focus:border-[#A13C36]" style={{ backgroundColor: COLORS.bg, borderColor: COLORS.cardBorder, color: COLORS.textMain }} placeholder="ประเภทงาน" />
+                        <datalist id="taskTypesList">
+                          {taskTypes.map(type => <option key={type} value={type} />)}
+                        </datalist>
+
+                        <input list="channelsList" name="channel" required defaultValue={editingTask?.channel || ''} className="w-full p-3.5 rounded-2xl font-black text-[10px] outline-none border-2 shadow-sm focus:border-[#A13C36]" style={{ backgroundColor: COLORS.bg, borderColor: COLORS.cardBorder, color: COLORS.textMain }} placeholder="ช่องทาง" />
+                        <datalist id="channelsList">
+                          {channels.map(ch => <option key={ch} value={ch} />)}
+                        </datalist>
+                     </div>
+
+                     <div className="grid grid-cols-2 gap-2">
+                        <input name="admin" defaultValue={editingTask?.admin || ''} className="w-full p-3.5 rounded-2xl font-black text-[10px] outline-none border-2 shadow-sm focus:border-[#A13C36]" style={{ backgroundColor: COLORS.bg, borderColor: COLORS.cardBorder, color: COLORS.textMain }} placeholder="ชื่อแอดมิน" />
+                        
+                        <select name="status" defaultValue={editingTask ? getNormalizedStatus(editingTask.status) : 'waiting in queue'} className="w-full p-3.5 rounded-2xl font-black text-[9px] outline-none border-2 shadow-sm focus:border-[#A13C36] uppercase cursor-pointer" style={{ backgroundColor: COLORS.bg, borderColor: COLORS.cardBorder, color: COLORS.textMain }}>
+                          {TASK_STATUSES.map(s => <option key={s.id} value={s.id}>{s.label}</option>)}
+                        </select>
+                     </div>
+
+                     <textarea name="details" rows="2" defaultValue={editingTask?.details || ''} className="w-full p-3.5 rounded-2xl border-2 outline-none text-[11px] font-bold shadow-sm transition-all resize-none focus:border-[#A13C36]" style={{ backgroundColor: COLORS.bg, borderColor: COLORS.cardBorder, color: COLORS.textMain }} placeholder="รายละเอียดเพิ่มเติม (ถ้ามี)..."></textarea>
+                     
+                     <div className="grid grid-cols-2 gap-2">
+                       <div className="flex flex-col gap-1 p-2 rounded-2xl border-2 shadow-sm" style={{ backgroundColor: COLORS.purple, borderColor: COLORS.pinkDeep }}>
+                         <div className="flex items-center gap-1.5 text-[9px] uppercase tracking-wider font-black pl-1" style={{ color: COLORS.pinkDeep }}>
+                           <IconCalendar size={10} /><span>เริ่มทำ</span>
+                         </div>
+                         <input name="startDate" type="date" required defaultValue={editingTask?.startDate || today} className="w-full p-1.5 rounded-xl border-2 outline-none text-[10px] font-black shadow-sm cursor-pointer bg-white" style={{ color: COLORS.pinkDeep, borderColor: COLORS.pinkDeep }} />
+                       </div>
+                       
+                       <div className="flex flex-col gap-1 p-2 rounded-2xl border-2 shadow-sm" style={{ backgroundColor: COLORS.purple, borderColor: COLORS.pinkDeep }}>
+                         <div className="flex items-center gap-1.5 text-[9px] uppercase tracking-wider font-black pl-1" style={{ color: COLORS.pinkDeep }}>
+                           <IconCalendar size={10} /><span>กำหนดส่ง</span>
+                         </div>
+                         <input name="deadline" type="date" required defaultValue={editingTask?.deadline || nextQueueDate} className="w-full p-1.5 rounded-xl border-2 outline-none text-[10px] font-black shadow-sm cursor-pointer bg-white" style={{ color: COLORS.pinkDeep, borderColor: COLORS.pinkDeep }} />
+                       </div>
+                     </div>
+                     
+                     <div className="flex items-center gap-2 mt-3">
+                       <button type="submit" className="w-full py-3.5 rounded-2xl font-black text-[12px] text-white shadow-lg active:scale-95 transition-all disabled:opacity-50" style={{ backgroundColor: COLORS.pinkDeep }}>บันทึกคิวงาน</button>
+                     </div>
+                     <button type="button" onClick={() => { setShowModal(false); setEditingTask(null); }} className="w-full text-[9px] font-black mt-2 uppercase tracking-widest" style={{ color: COLORS.textSoft }}>Close</button>
+                   </div>
+                </form>
+              </div>
+            )}
+
+            {/* ==========================================
+                🔐 MODAL: Login Admin
+                ========================================== */}
+            {showAuthModal && (
+              <div className="fixed inset-0 z-[110] flex items-center justify-center p-6 bg-black/30 backdrop-blur-sm animate-fadeIn">
+                <form onSubmit={handleAdminLogin} className="w-full max-w-xs rounded-[35px] p-6 shadow-2xl animate-slideUp border-[3px]" style={{ backgroundColor: COLORS.white, borderColor: COLORS.pinkDeep }}>
+                   <h3 className="text-[14px] font-black mb-4 text-center" style={{ color: COLORS.pinkDeep }}>เข้าสู่ระบบ Admin</h3>
+                   <div className="space-y-2">
+                     <input type="password" required value={password} onChange={(e) => { setPassword(e.target.value); setAuthError(false); }} className={`w-full p-3.5 rounded-2xl border-2 outline-none text-[12px] font-bold shadow-sm transition-all text-center tracking-widest ${authError ? 'border-red-500 bg-red-50' : ''}`} style={{ backgroundColor: authError ? '' : COLORS.bg, borderColor: authError ? '' : COLORS.cardBorder, color: COLORS.textMain }} placeholder="ใส่รหัสผ่าน" disabled={isVerifyingAuth} />
+                     {authError && <p className="text-red-500 text-[9px] text-center font-black">รหัสผ่านไม่ถูกต้อง!</p>}
+                     <button type="submit" disabled={isVerifyingAuth} className="w-full h-12 rounded-2xl font-black text-[12px] mt-3 text-white shadow-lg flex items-center justify-center active:scale-95 transition-all disabled:opacity-70" style={{ backgroundColor: COLORS.pinkDeep }}>
+                        {isVerifyingAuth ? <IconLoader size={18} className="animate-spin-slow" /> : 'Login'}
+                     </button>
+                     <button type="button" onClick={() => { setShowAuthModal(false); setAuthError(false); setPassword(''); }} className="w-full text-[9px] font-black mt-1 uppercase tracking-widest" style={{ color: COLORS.textSoft }} disabled={isVerifyingAuth}>Close</button>
+                   </div>
+                </form>
+              </div>
+            )}
+
+            {/* ==========================================
+                🖼️ MODAL: เปลี่ยนรูปโปรไฟล์
+                ========================================== */}
+            {showImageModal && (
+              <div className="fixed inset-0 z-[120] flex items-center justify-center p-6 bg-black/30 backdrop-blur-sm animate-fadeIn">
+                <form onSubmit={(e) => { 
+                    e.preventDefault(); 
+                    if (tempImageUrl) { 
+                        let finalUrl = tempImageUrl;
+                        const match = finalUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || finalUrl.match(/id=([a-zA-Z0-9_-]+)/) || finalUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
+                        if (match && match[1]) {
+                            finalUrl = `https://lh3.googleusercontent.com/d/$${match[1]}`;
+                        }
+                        setProfileImage(finalUrl); 
+                        fetchAPI({ action: 'saveProfileImage', imageUrl: finalUrl });
+                    } 
+                    setShowImageModal(false); 
+                    setTempImageUrl(''); 
+                }} className="w-full max-w-xs rounded-[35px] p-6 shadow-2xl animate-slideUp border-[3px]" style={{ backgroundColor: COLORS.white, borderColor: COLORS.pinkDeep }}>
+                   <h3 className="text-[14px] font-black mb-4 text-center" style={{ color: COLORS.pinkDeep }}>เปลี่ยนรูปโปรไฟล์ 🎀</h3>
+                   <div className="space-y-2">
+                     <input type="url" required value={tempImageUrl} onChange={(e) => setTempImageUrl(e.target.value)} className="w-full p-3.5 rounded-2xl border-2 outline-none text-[11px] font-bold shadow-sm transition-all text-center focus:border-[#A13C36]" style={{ backgroundColor: COLORS.bg, borderColor: COLORS.cardBorder, color: COLORS.textMain }} placeholder="วางลิงก์รูปภาพ Google Drive ที่นี่..." />
+                     <button type="submit" className="w-full py-3.5 rounded-2xl font-black text-[12px] mt-3 text-white shadow-lg active:scale-95 transition-all" style={{ backgroundColor: COLORS.pinkDeep }}>Save Image</button>
+                     <button type="button" onClick={() => { setShowImageModal(false); setTempImageUrl(''); }} className="w-full text-[9px] font-black mt-1 uppercase tracking-widest" style={{ color: COLORS.textSoft }}>Close</button>
+                   </div>
+                </form>
+              </div>
+            )}
+
+            {/* ==========================================
+                🖼️ MODAL: เปลี่ยนแบนเนอร์ร้าน
+                ========================================== */}
+            {showBannerModal && (
+              <div className="fixed inset-0 z-[120] flex items-center justify-center p-6 bg-black/30 backdrop-blur-sm animate-fadeIn">
+                <form onSubmit={(e) => { 
+                    e.preventDefault(); 
+                    if (tempBannerUrl) { 
+                        let finalUrl = tempBannerUrl;
+                        const match = finalUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || finalUrl.match(/id=([a-zA-Z0-9_-]+)/) || finalUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
+                        if (match && match[1]) {
+                            finalUrl = `https://lh3.googleusercontent.com/d/$${match[1]}`;
+                        }
+                        setBannerImage(finalUrl); 
+                        toggleBannerVisibility(true);
+                        fetchAPI({ action: 'saveBannerImage', imageUrl: finalUrl });
+                    } 
+                    setShowBannerModal(false); 
+                    setTempBannerUrl(''); 
+                }} className="w-full max-w-xs rounded-[35px] p-6 shadow-2xl animate-slideUp border-[3px]" style={{ backgroundColor: COLORS.white, borderColor: COLORS.pinkDeep }}>
+                   <h3 className="text-[14px] font-black mb-4 text-center" style={{ color: COLORS.pinkDeep }}>เปลี่ยนแบนเนอร์ 🎀</h3>
+                   <div className="space-y-2">
+                     <input type="url" required value={tempBannerUrl} onChange={(e) => setTempBannerUrl(e.target.value)} className="w-full p-3.5 rounded-2xl border-2 outline-none text-[11px] font-bold shadow-sm transition-all text-center focus:border-[#A13C36]" style={{ backgroundColor: COLORS.bg, borderColor: COLORS.cardBorder, color: COLORS.textMain }} placeholder="วางลิงก์รูปภาพ Google Drive..." />
+                     <button type="submit" className="w-full py-3.5 rounded-2xl font-black text-[12px] mt-3 text-white shadow-lg active:scale-95 transition-all" style={{ backgroundColor: COLORS.pinkDeep }}>Save Banner</button>
+                     <button type="button" onClick={() => { setShowBannerModal(false); setTempBannerUrl(''); }} className="w-full text-[9px] font-black mt-1 uppercase tracking-widest" style={{ color: COLORS.textSoft }}>Close</button>
+                   </div>
+                </form>
+              </div>
+            )}
+
+            {/* ==========================================
+                🗑️ MODAL: ยืนยันการลบงาน
+                ========================================== */}
+            {taskToDelete && (
+              <div className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-black/30 backdrop-blur-sm animate-fadeIn">
+                <div className="w-full max-w-[260px] rounded-[30px] p-6 shadow-2xl animate-slideUp text-center border-[3px]" style={{ backgroundColor: COLORS.white, borderColor: COLORS.pinkDeep }}>
+                  <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3 shadow-md text-white" style={{ backgroundColor: COLORS.pinkDeep }}>
+                     <IconTrash size={26} />
+                  </div>
+                  <h3 className="text-[14px] font-black mb-1" style={{ color: COLORS.pinkDeep }}>ยืนยันการลบ?</h3>
+                  <p className="text-[10px] font-bold mb-5" style={{ color: COLORS.textSoft }}>คุณต้องการลบคิวงานนี้ใช่หรือไม่<br/>(ไม่สามารถกู้คืนได้)</p>
+                  
+                  <div className="flex gap-2">
+                    <button onClick={() => setTaskToDelete(null)} className="flex-1 py-3 rounded-2xl font-black text-[11px] active:scale-95 transition-all shadow-sm border-2" style={{ color: COLORS.pinkDeep, backgroundColor: COLORS.white, borderColor: COLORS.pinkDeep }}>ยกเลิก</button>
+                    <button onClick={executeDeleteTask} className="flex-1 py-3 rounded-2xl font-black text-[11px] text-white active:scale-95 transition-all shadow-md" style={{ backgroundColor: COLORS.pinkDeep }}>ลบข้อมูล</button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+          </div>
+          
+          {/* CSS Animations */}
+          <style>{`
+            /* ซ่อนแถบ Scrollbar แต่ยังไถได้ */
+            .hide-scrollbar::-webkit-scrollbar { display: none; }
+            .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+            /* แอนิเมชันลอยสำหรับไอคอนในการ์ด */
+            @keyframes float-icon {
+              0%, 100% { transform: translateY(0); }
+              50% { transform: translateY(-4px); }
+            }
+            .animate-float-icon { animation: float-icon 3.5s ease-in-out infinite; }
+
+            /* แอนิเมชันของรูปตกแต่งตอนกำลังทำ */
+            @keyframes float-deco {
+              0%, 100% { transform: translateY(0) rotate(0deg); }
+              50% { transform: translateY(-6px) rotate(6deg); }
+            }
+            @keyframes float-deco-rev {
+              0%, 100% { transform: translateY(0) rotate(0deg); }
+              50% { transform: translateY(6px) rotate(-6deg); }
+            }
+            .animate-float-deco-1 { animation: float-deco 3s ease-in-out infinite; }
+            .animate-float-deco-2 { animation: float-deco-rev 3.5s ease-in-out infinite; }
+            .animate-float-deco-3 { animation: float-deco 4s ease-in-out infinite; }
+            .animate-float-deco-4 { animation: float-deco-rev 4.5s ease-in-out infinite; }
+
+            @keyframes float { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(25px, -15px); } }
+            @keyframes float-reverse { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-25px, 15px); } }
+            @keyframes breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+            
+            @keyframes bounce-slow { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+            @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+            @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+            @keyframes text-wave { 0%, 20%, 100% { transform: translateY(0px); } 10% { transform: translateY(-5px); } }
+            @keyframes spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+            /* CSS สำหรับหลอดริ้ว (Stripes) */
+            @keyframes move-stripes {
+              0% { background-position: 0 0; }
+              100% { background-position: 20px 0; }
+            }
+            .progress-stripes {
+              background-image: linear-gradient(
+                45deg,
+                rgba(255, 255, 255, 0.2) 25%,
+                transparent 25%,
+                transparent 50%,
+                rgba(255, 255, 255, 0.2) 50%,
+                rgba(255, 255, 255, 0.2) 75%,
+                transparent 75%,
+                transparent
+              );
+              background-size: 20px 20px;
+              animation: move-stripes 1s linear infinite;
+            }
+
+            /* แอนิเมชันป๊อป (ตอนเปลี่ยนรูป 4 สเตป) */
+            @keyframes pop-bounce {
+              0% { transform: scale(0.8); opacity: 0.5; }
+              50% { transform: scale(1.1); opacity: 1; }
+              100% { transform: scale(1); opacity: 1; }
+            }
+            .animate-pop { animation: pop-bounce 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+
+            .animate-text-wave { animation: text-wave 4s ease-in-out infinite; }
+            .animate-breathe { animation: breathe 4s ease-in-out infinite; transform-origin: center; }
+            .animate-float { animation: float 15s ease-in-out infinite; }
+            .animate-float-reverse { animation: float-reverse 18s ease-in-out infinite; }
+            .animate-bounce-slow { animation: bounce-slow 4s ease-in-out infinite; }
+            .animate-slideUp { animation: slideUp 0.3s ease-out; }
+            .animate-fadeIn { animation: fadeIn 0.4s ease-out; }
+            .animate-spin-slow { animation: spin-slow 4s linear infinite; }
+          `}</style>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
