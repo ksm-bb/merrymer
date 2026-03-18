@@ -141,7 +141,7 @@
           <div className="flex flex-col justify-center ml-2 relative z-10">
             <div className="flex items-center gap-1">
              <h1 className="text-2xl font-black italic tracking-tighter flex">
-                {"merrymer".split('').map((char, index) => (
+                {"KOSAME".split('').map((char, index) => (
                   <span 
                     key={index} 
                     className={`bg-gradient-to-br from-[#A13C36] via-[#C1645B] to-[#E6D18C] bg-clip-text text-transparent drop-shadow-sm inline-block animate-text-wave pb-2 ${char === ' ' ? 'w-2.5' : 'pr-[1.5px]'}`} 
@@ -248,9 +248,9 @@
     ));
 
     // ==========================================
-    // 🃏 COMPONENT: TaskCard 
+    // 🃏 COMPONENT: TaskCard (เพิ่ม Index ป้ายคิว)
     // ==========================================
-    const TaskCard = React.memo(({ task, isAdmin, onEdit, onCycleStatus }) => {
+    const TaskCard = React.memo(({ task, isAdmin, onEdit, onCycleStatus, index }) => {
       const normStatus = getNormalizedStatus(task.status);
       const currentStatusInfo = TASK_STATUSES.find(s => s.id === normStatus) || TASK_STATUSES[0];
       const isDone = normStatus === 'ready for delivery';
@@ -260,9 +260,15 @@
       const cardBorderColor = isDone ? COLORS.blueDeep : COLORS.cardBorder;
 
       return (
-        <div className="flex flex-row items-center w-full mb-3.5 gap-2 group">
+        <div className="flex flex-row items-center w-full mb-3.5 gap-2 group relative">
           
           <div className="w-[60px] h-[60px] shrink-0 relative flex items-center justify-center z-10">
+            {/* ✅ 4. ป้ายวงกลมบอกลำดับคิว */}
+            {index !== undefined && (
+              <div className="absolute -top-1 -left-1 w-[18px] h-[18px] rounded-full flex items-center justify-center shadow-sm z-30 border-[1px]" style={{ backgroundColor: COLORS.white, borderColor: COLORS.cardBorder, color: COLORS.pinkDeep }}>
+                <span className="text-[9px] font-black leading-none pt-[1px]">{index}</span>
+              </div>
+            )}
             <img src={currentStatusInfo.img} className="w-full h-full object-contain animate-float-icon drop-shadow-md" alt="status icon" />
           </div>
           
@@ -322,7 +328,6 @@
               </div>
 
               <div className="mt-0.5">
-                 {/* ขยับสถานะลงมาให้เกือบติดหลอด */}
                  <div className="flex justify-between items-end mb-[1px] px-1">
                    <span className={`text-[8px] font-black uppercase tracking-wider leading-none truncate pr-1 ${isDone ? 'text-white' : ''}`} style={{ color: isDone ? '#FFFFFF' : COLORS.pinkDeep }}>{currentStatusInfo.label}</span>
                  </div>
@@ -593,7 +598,11 @@
         return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
       }, []); 
       
-      const todayTasks = useMemo(() => tasks.filter(t => t.deadline === today), [tasks, today]);
+      // ✅ 3. ลอจิกคิวงานที่กินเวลาหลายวัน (startDate ถึง deadline)
+      const todayTasks = useMemo(() => tasks.filter(t => {
+        if (!t.startDate) return t.deadline === today;
+        return today >= t.startDate && today <= t.deadline;
+      }), [tasks, today]);
       
       const doneToday = useMemo(() => todayTasks.filter(t => getNormalizedStatus(t.status) === 'ready for delivery').length, [todayTasks]);
       const progress = todayTasks.length === 0 ? 0 : Math.round((doneToday / todayTasks.length) * 100);
@@ -702,12 +711,13 @@
           <div className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden" style={{ backgroundColor: COLORS.bg }}>
              <DynamicBackground />
              <div className="flex flex-col items-center z-10 animate-breathe">
-               <div className="flex items-center gap-2 px-8 py-3 backdrop-blur-md rounded-full shadow-lg border-2" style={{ backgroundColor: `${COLORS.white}ee`, borderColor: COLORS.pinkDeep }}>
-                 <p className="text-[14px] font-black tracking-widest" style={{ color: COLORS.pinkDeep }}>กำลังโหลดข้อมูล</p>
-                 <div className="flex gap-1.5 pt-1 ml-2">
-                   <span className="w-2 h-2 rounded-full animate-bounce" style={{ backgroundColor: COLORS.pinkDeep, animationDelay: '0s' }}></span>
-                   <span className="w-2 h-2 rounded-full animate-bounce" style={{ backgroundColor: COLORS.purple, animationDelay: '0.15s' }}></span>
-                   <span className="w-2 h-2 rounded-full animate-bounce" style={{ backgroundColor: COLORS.blueDeep, animationDelay: '0.3s' }}></span>
+               {/* ✅ 5. ย่อขนาดป้ายกำลังโหลด */}
+               <div className="flex items-center gap-1.5 px-5 py-2 backdrop-blur-md rounded-full shadow-md border-[2px]" style={{ backgroundColor: `${COLORS.white}ee`, borderColor: COLORS.pinkDeep }}>
+                 <p className="text-[11px] font-black tracking-widest" style={{ color: COLORS.pinkDeep }}>กำลังโหลดข้อมูล</p>
+                 <div className="flex gap-1 pt-0.5 ml-1">
+                   <span className="w-1.5 h-1.5 rounded-full animate-bounce" style={{ backgroundColor: COLORS.pinkDeep, animationDelay: '0s' }}></span>
+                   <span className="w-1.5 h-1.5 rounded-full animate-bounce" style={{ backgroundColor: COLORS.purple, animationDelay: '0.15s' }}></span>
+                   <span className="w-1.5 h-1.5 rounded-full animate-bounce" style={{ backgroundColor: COLORS.blueDeep, animationDelay: '0.3s' }}></span>
                  </div>
                </div>
              </div>
@@ -728,20 +738,21 @@
             {/* ===== Banner Section ===== */}
             <div className="px-5 relative z-10 mb-4">
                
-               {/* แถบสถานะเปิด-ปิดร้าน */}
+               {/* ✅ 1. ป้ายเปิด-ปิดร้าน ใส่ relative กันเฟืองทะลุ */}
                <div 
                  onClick={() => { if (isAdmin) { setTempStore(storeSettings); setShowStoreModal(true); } }}
-                 className={`px-4 py-2.5 rounded-[20px] mb-3 shadow-sm border-[2px] flex items-center justify-center transition-all duration-500 ${isAdmin ? 'cursor-pointer hover:scale-[1.02]' : ''}`}
+                 className={`px-4 py-2.5 rounded-[20px] mb-3 shadow-sm border-[2px] flex items-center justify-center transition-all duration-500 relative ${isAdmin ? 'cursor-pointer hover:scale-[1.02]' : ''}`}
                  style={{
                    backgroundColor: isStoreOpen ? '#798E61' : '#A13C36',
                    borderColor: isStoreOpen ? '#798E61' : '#A13C36',
                    color: '#FFFFFF'
                  }}
                >
-                 <span className="text-[12px] font-black tracking-wide flex items-center gap-2">
+                 <span className="text-[12px] font-black tracking-wide flex items-center gap-2 z-10">
                    <span className="animate-pulse">{isStoreOpen ? '🟢' : '🔴'}</span> {storeStatusText}
                  </span>
-                 {isAdmin && <span className="absolute right-4 opacity-80 hover:opacity-100"><IconSettings size={16} /></span>}
+                 {/* ไอคอนเฟืองอยู่ในกรอบเป๊ะ */}
+                 {isAdmin && <span className="absolute right-3 opacity-80 hover:opacity-100 flex items-center justify-center h-full"><IconSettings size={14} /></span>}
                </div>
 
                {bannerImage && isBannerVisible && (
@@ -825,7 +836,8 @@
                     <div className="h-[2px] flex-1 mx-3 rounded-full" style={{ backgroundColor: COLORS.cardBorder, opacity: 0.5 }}></div>
                   </div>
                   <div className="space-y-1">
-                    {todayTasks.length > 0 ? todayTasks.map(t => <TaskCard key={t.id} task={t} isAdmin={isAdmin} onEdit={handleEditTask} onCycleStatus={cycleStatus} />) : (
+                    {/* ✅ ส่งค่าลำดับคิวงาน (index + 1) เข้าไปในการ์ด */}
+                    {todayTasks.length > 0 ? todayTasks.map((t, idx) => <TaskCard key={t.id} task={t} isAdmin={isAdmin} onEdit={handleEditTask} onCycleStatus={cycleStatus} index={idx + 1} />) : (
                       <div className="text-center py-10 rounded-[28px] border-[3px] border-dashed bg-white/50" style={{ borderColor: COLORS.cardBorder }}>
                         <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: COLORS.pinkDeep }}>Sky is clear ✨</p>
                       </div>
@@ -858,7 +870,7 @@
                   {isCalendarView && <CalendarView currentMonth={currentMonth} setCurrentMonth={setCurrentMonth} selectedDate={selectedDate} setSelectedDate={setSelectedDate} today={today} tasks={tasks} />}
 
                   <div className="space-y-1">
-                    {displayedTasks.length > 0 ? displayedTasks.map(t => <TaskCard key={t.id} task={t} isAdmin={isAdmin} onEdit={handleEditTask} onCycleStatus={cycleStatus} />) : (
+                    {displayedTasks.length > 0 ? displayedTasks.map((t, idx) => <TaskCard key={t.id} task={t} isAdmin={isAdmin} onEdit={handleEditTask} onCycleStatus={cycleStatus} index={idx + 1} />) : (
                       <div className="text-center py-10 rounded-[28px] border-[3px] border-dashed shadow-sm mt-3 bg-white/50" style={{ borderColor: COLORS.cardBorder }}>
                         <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: COLORS.pinkDeep }}>
                           {isCalendarView ? "วันนี้คิวว่าง ✨" : "No records found ✨"}
@@ -908,14 +920,15 @@
                       </div>
                     </div>
 
-                    <div className={`flex gap-2 transition-opacity ${tempStore.mode !== 'auto' ? 'opacity-50 pointer-events-none' : ''}`}>
-                      <div className="flex-1">
-                        <label className="text-[10px] font-black text-gray-500 mb-1 block tracking-wider">เวลาเปิด (Auto)</label>
-                        <input type="time" value={tempStore.openTime} onChange={(e) => setTempStore({...tempStore, openTime: e.target.value})} className="w-full p-2.5 rounded-xl border-2 outline-none text-[12px] font-black shadow-sm text-center" style={{ borderColor: COLORS.cardBorder, color: COLORS.textMain }} />
+                    {/* ✅ 2. ปรับช่องกรอกเวลาให้พอดีมือถือ (ใช้ grid ลด padding) */}
+                    <div className={`grid grid-cols-2 gap-2 transition-opacity ${tempStore.mode !== 'auto' ? 'opacity-50 pointer-events-none' : ''}`}>
+                      <div className="flex flex-col">
+                        <label className="text-[9px] font-black text-gray-500 mb-1 block tracking-wider">เวลาเปิด (Auto)</label>
+                        <input type="time" value={tempStore.openTime} onChange={(e) => setTempStore({...tempStore, openTime: e.target.value})} className="w-full p-2 rounded-xl border-2 outline-none text-[11px] font-black shadow-sm text-center" style={{ borderColor: COLORS.cardBorder, color: COLORS.textMain }} />
                       </div>
-                      <div className="flex-1">
-                        <label className="text-[10px] font-black text-gray-500 mb-1 block tracking-wider">เวลาปิด (Auto)</label>
-                        <input type="time" value={tempStore.closeTime} onChange={(e) => setTempStore({...tempStore, closeTime: e.target.value})} className="w-full p-2.5 rounded-xl border-2 outline-none text-[12px] font-black shadow-sm text-center" style={{ borderColor: COLORS.cardBorder, color: COLORS.textMain }} />
+                      <div className="flex flex-col">
+                        <label className="text-[9px] font-black text-gray-500 mb-1 block tracking-wider">เวลาปิด (Auto)</label>
+                        <input type="time" value={tempStore.closeTime} onChange={(e) => setTempStore({...tempStore, closeTime: e.target.value})} className="w-full p-2 rounded-xl border-2 outline-none text-[11px] font-black shadow-sm text-center" style={{ borderColor: COLORS.cardBorder, color: COLORS.textMain }} />
                       </div>
                     </div>
 
@@ -1022,19 +1035,20 @@
 
                      <textarea name="details" rows="2" defaultValue={editingTask?.details || ''} className="w-full p-3.5 rounded-2xl border-2 outline-none text-[11px] font-bold shadow-sm transition-all resize-none focus:border-[#A13C36]" style={{ backgroundColor: COLORS.bg, borderColor: COLORS.cardBorder, color: COLORS.textMain }} placeholder="รายละเอียดเพิ่มเติม (ถ้ามี)..."></textarea>
                      
+                     {/* ✅ 2. ปรับช่องกรอกวันที่ให้พอดีมือถือ (ลด padding และ text size) */}
                      <div className="grid grid-cols-2 gap-2">
-                       <div className="flex flex-col gap-1 p-2 rounded-2xl border-2 shadow-sm" style={{ backgroundColor: COLORS.purple, borderColor: COLORS.pinkDeep }}>
-                         <div className="flex items-center gap-1.5 text-[9px] uppercase tracking-wider font-black pl-1" style={{ color: COLORS.pinkDeep }}>
-                           <IconCalendar size={10} /><span>เริ่มทำ</span>
+                       <div className="flex flex-col gap-0.5 p-1.5 rounded-2xl border-2 shadow-sm" style={{ backgroundColor: COLORS.purple, borderColor: COLORS.pinkDeep }}>
+                         <div className="flex items-center gap-1 text-[8px] uppercase tracking-wider font-black pl-1" style={{ color: COLORS.pinkDeep }}>
+                           <IconCalendar size={9} /><span>เริ่มทำ</span>
                          </div>
-                         <input name="startDate" type="date" required defaultValue={editingTask?.startDate || today} className="w-full p-1.5 rounded-xl border-2 outline-none text-[10px] font-black shadow-sm cursor-pointer bg-white" style={{ color: COLORS.pinkDeep, borderColor: COLORS.pinkDeep }} />
+                         <input name="startDate" type="date" required defaultValue={editingTask?.startDate || today} className="w-full p-1 rounded-xl border-2 outline-none text-[9px] font-black shadow-sm cursor-pointer bg-white" style={{ color: COLORS.pinkDeep, borderColor: COLORS.pinkDeep }} />
                        </div>
                        
-                       <div className="flex flex-col gap-1 p-2 rounded-2xl border-2 shadow-sm" style={{ backgroundColor: COLORS.purple, borderColor: COLORS.pinkDeep }}>
-                         <div className="flex items-center gap-1.5 text-[9px] uppercase tracking-wider font-black pl-1" style={{ color: COLORS.pinkDeep }}>
-                           <IconCalendar size={10} /><span>กำหนดส่ง</span>
+                       <div className="flex flex-col gap-0.5 p-1.5 rounded-2xl border-2 shadow-sm" style={{ backgroundColor: COLORS.purple, borderColor: COLORS.pinkDeep }}>
+                         <div className="flex items-center gap-1 text-[8px] uppercase tracking-wider font-black pl-1" style={{ color: COLORS.pinkDeep }}>
+                           <IconCalendar size={9} /><span>กำหนดส่ง</span>
                          </div>
-                         <input name="deadline" type="date" required defaultValue={editingTask?.deadline || nextQueueDate} className="w-full p-1.5 rounded-xl border-2 outline-none text-[10px] font-black shadow-sm cursor-pointer bg-white" style={{ color: COLORS.pinkDeep, borderColor: COLORS.pinkDeep }} />
+                         <input name="deadline" type="date" required defaultValue={editingTask?.deadline || nextQueueDate} className="w-full p-1 rounded-xl border-2 outline-none text-[9px] font-black shadow-sm cursor-pointer bg-white" style={{ color: COLORS.pinkDeep, borderColor: COLORS.pinkDeep }} />
                        </div>
                      </div>
                      
