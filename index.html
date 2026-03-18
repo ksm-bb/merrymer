@@ -263,11 +263,6 @@
         <div className="flex flex-row items-center w-full mb-3.5 gap-2 group relative">
           
           <div className="w-[60px] h-[60px] shrink-0 relative flex items-center justify-center z-10">
-            {index !== undefined && (
-              <div className="absolute -top-2.5 -left-2.5 w-[22px] h-[22px] rounded-full flex items-center justify-center shadow-md z-30 border-[2px]" style={{ backgroundColor: COLORS.white, borderColor: COLORS.cardBorder, color: COLORS.pinkDeep }}>
-                <span className="text-[10px] font-black leading-none pt-[1px]">{index}</span>
-              </div>
-            )}
             <img src={currentStatusInfo.img} className="w-full h-full object-contain animate-float-icon drop-shadow-md" alt="status icon" />
           </div>
           
@@ -279,6 +274,13 @@
               borderColor: cardBorderColor, 
             }}
           >
+            {/* ✅ ย้ายป้ายเลขคิวมาที่มุมซ้ายบนของตัวการ์ด */}
+            {index !== undefined && (
+              <div className="absolute -top-2.5 -left-2.5 w-[22px] h-[22px] rounded-full flex items-center justify-center shadow-md z-30 border-[2px]" style={{ backgroundColor: COLORS.white, borderColor: COLORS.cardBorder, color: COLORS.pinkDeep }}>
+                <span className="text-[10px] font-black leading-none pt-[1px]">{index}</span>
+              </div>
+            )}
+
             {isInProgress && (
                <div className="absolute inset-0 pointer-events-none z-0">
                  <img src="https://i.ibb.co/rKwvDp8P/4.png" className="absolute -top-2 -left-3 w-5 h-5 object-contain animate-float-deco-1 drop-shadow-md" />
@@ -526,7 +528,6 @@
         setStoreSettings(tempStore);
         localStorage.setItem('kosame_storeSettings', JSON.stringify(tempStore));
         setShowStoreModal(false);
-        // ✨ ส่งข้อมูลเข้าระบบ Google Sheets
         fetchAPI({ action: 'saveStoreSettings', storeSettings: tempStore });
       };
 
@@ -551,7 +552,7 @@
       };
 
       useEffect(() => {
-        document.title = "KOSAME"; 
+        document.title = "merryme"; 
         
         fetch(WEB_APP_URL + "?action=getInitialData")
           .then(res => res.json())
@@ -848,6 +849,7 @@
                     <div className="h-[2px] flex-1 mx-3 rounded-full" style={{ backgroundColor: COLORS.cardBorder, opacity: 0.5 }}></div>
                   </div>
                   <div className="space-y-1">
+                    {/* ✅ ส่งค่าลำดับคิวงานเข้าไป */}
                     {todayTasks.length > 0 ? todayTasks.map((t, idx) => <TaskCard key={t.id} task={t} isAdmin={isAdmin} onEdit={handleEditTask} onCycleStatus={cycleStatus} index={idx + 1} />) : (
                       <div className="text-center py-10 rounded-[28px] border-[3px] border-dashed bg-white/50" style={{ borderColor: COLORS.cardBorder }}>
                         <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: COLORS.pinkDeep }}>Sky is clear ✨</p>
@@ -1105,7 +1107,7 @@
                         let finalUrl = tempImageUrl;
                         const match = finalUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || finalUrl.match(/id=([a-zA-Z0-9_-]+)/) || finalUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
                         if (match && match[1]) {
-                            finalUrl = `https://lh3.googleusercontent.com/d/$${match[1]}`;
+                            finalUrl = `https://lh3.googleusercontent.com/d/${match[1]}`;
                         }
                         setProfileImage(finalUrl); 
                         fetchAPI({ action: 'saveProfileImage', imageUrl: finalUrl });
@@ -1134,7 +1136,7 @@
                         let finalUrl = tempBannerUrl;
                         const match = finalUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || finalUrl.match(/id=([a-zA-Z0-9_-]+)/) || finalUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
                         if (match && match[1]) {
-                            finalUrl = `https://lh3.googleusercontent.com/d/$${match[1]}`;
+                            finalUrl = `https://lh3.googleusercontent.com/d/${match[1]}`;
                         }
                         setBannerImage(finalUrl); 
                         toggleBannerVisibility(true);
@@ -1205,6 +1207,7 @@
             @keyframes float { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(25px, -15px); } }
             @keyframes float-reverse { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-25px, 15px); } }
             @keyframes breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+            @keyframes float-particle-1 { 0% { transform: translateY(0); opacity: 0; } 50% { opacity: 1; } 100% { transform: translateY(-20px); opacity: 0; } }
             
             @keyframes bounce-slow { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
             @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
