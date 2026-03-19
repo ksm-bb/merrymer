@@ -552,7 +552,7 @@
       };
 
       useEffect(() => {
-        document.title = "merryme"; 
+        document.title = "merrymer"; 
         
         fetch(WEB_APP_URL + "?action=getInitialData")
           .then(res => res.json())
@@ -954,7 +954,7 @@
                     </div>
 
                     <div className="pt-2">
-                      <button onClick={saveStoreSettings} className="w-full py-3.5 rounded-2xl font-black text-[13px] text-white shadow-lg active:scale-95 transition-all" style={{ backgroundColor: COLORS.pinkDeep }}>บันทึกและปิด (ชั่วคราว)</button>
+                      <button onClick={saveStoreSettings} className="w-full py-3.5 rounded-2xl font-black text-[13px] text-white shadow-lg active:scale-95 transition-all" style={{ backgroundColor: COLORS.pinkDeep }}>บันทึกข้อมูล</button>
                       <button onClick={() => setShowStoreModal(false)} className="w-full mt-3 text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-gray-600">ยกเลิก</button>
                     </div>
                   </div>
